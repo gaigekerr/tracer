@@ -120,71 +120,42 @@ lngmin = 0.
 lngmax = 360.
 pmin = 800.
 pmax = 1005.
-import numpy as np
-import matplotlib.pyplot as plt
-# Load GEOSChem tracers
-TRAC_0_10, lat_gc, lng_gc, lev_gc = \
-    tracer_open.open_geoschem(years, months, 'merra2_2x25_RnPbBe_co50', 
-    'SpeciesConc', 'SpeciesConc_TRAC50_0_10', latmin, latmax, lngmin, lngmax, 
-    pmin, pmax)
-TRAC_10_20, lat_gc, lng_gc, lev_gc = \
-    tracer_open.open_geoschem(years, months, 'merra2_2x25_RnPbBe_co50', 
-    'SpeciesConc', 'SpeciesConc_TRAC50_10_20', latmin, latmax, lngmin, lngmax, 
-    pmin, pmax)
-TRAC_20_30, lat_gc, lng_gc, lev_gc = \
-    tracer_open.open_geoschem(years, months, 'merra2_2x25_RnPbBe_co50', 
-    'SpeciesConc', 'SpeciesConc_TRAC50_20_30', latmin, latmax, lngmin, lngmax, 
-    pmin, pmax)
-TRAC_30_40, lat_gc, lng_gc, lev_gc = \
-    tracer_open.open_geoschem(years, months, 'merra2_2x25_RnPbBe_co50', 
-    'SpeciesConc', 'SpeciesConc_TRAC50_30_40', latmin, latmax, lngmin, lngmax, 
-    pmin, pmax)
-TRAC_40_50, lat_gc, lng_gc, lev_gc = \
-    tracer_open.open_geoschem(years, months, 'merra2_2x25_RnPbBe_co50', 
-    'SpeciesConc', 'SpeciesConc_TRAC50_40_50', latmin, latmax, lngmin, lngmax, 
-    pmin, pmax)
-TRAC_50_60, lat_gc, lng_gc, lev_gc = \
-    tracer_open.open_geoschem(years, months, 'merra2_2x25_RnPbBe_co50', 
-    'SpeciesConc', 'SpeciesConc_TRAC50_50_60', latmin, latmax, lngmin, lngmax, 
-    pmin, pmax)
-TRAC_60_70, lat_gc, lng_gc, lev_gc = \
-    tracer_open.open_geoschem(years, months, 'merra2_2x25_RnPbBe_co50', 
-    'SpeciesConc', 'SpeciesConc_TRAC50_60_70', latmin, latmax, lngmin, lngmax, 
-    pmin, pmax)
-TRAC_70_80, lat_gc, lng_gc, lev_gc = \
-    tracer_open.open_geoschem(years, months, 'merra2_2x25_RnPbBe_co50', 
-    'SpeciesConc', 'SpeciesConc_TRAC50_70_80', latmin, latmax, lngmin, lngmax, 
-    pmin, pmax)
-TRAC_80_90, lat_gc, lng_gc, lev_gc = \
-    tracer_open.open_geoschem(years, months, 'merra2_2x25_RnPbBe_co50', 
-    'SpeciesConc', 'SpeciesConc_TRAC50_80_90', latmin, latmax, lngmin, lngmax, 
-    pmin, pmax)
-# # Load column GEOSChem CO50 and MERRA-2 column meridional wind with the 
-# # same vertical levels as CO50 in GEOSChem
-# co_50_gc, lat_gc, lng_gc, lev_gc = \
-#     tracer_open.open_geoschem_merra2_2x25_RnPbBe(years, months, 
-#     'SpeciesConc_CO_50', latmin, latmax, lngmin, lngmax, pmin, pmax)
-# Vcolumn_gc, lat_merra_gc, lng_merra_gc, lev_merra_gc = \
+# import matplotlib.pyplot as plt
+# # Load GEOSChem tracers
+# TRAC_0_10, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, months, 
+#     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_0_10', 
+#     latmin, latmax, lngmin, lngmax, pmin, pmax)
+# TRAC_10_20, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, months, 
+#     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_10_20', 
+#     latmin, latmax, lngmin, lngmax, pmin, pmax)
+# TRAC_20_30, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, months, 
+#     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_20_30', 
+#     latmin, latmax, lngmin, lngmax, pmin, pmax)
+# TRAC_30_40, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, months, 
+#     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_30_40', 
+#     latmin, latmax, lngmin, lngmax, pmin, pmax)
+# TRAC_40_50, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, months, 
+#     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_40_50', 
+#     latmin, latmax, lngmin, lngmax, pmin, pmax)
+# TRAC_50_60, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, months, 
+#     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_50_60', 
+#     latmin, latmax, lngmin, lngmax, pmin, pmax)
+# TRAC_60_70, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, months, 
+#     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_60_70', 
+#     latmin, latmax, lngmin, lngmax, pmin, pmax)
+# TRAC_70_80, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, months, 
+#     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_70_80', 
+#     latmin, latmax, lngmin, lngmax, pmin, pmax)
+# TRAC_80_90, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, months, 
+#     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_80_90', 
+#     latmin, latmax, lngmin, lngmax, pmin, pmax)
+# # Load MERRA-2 column meridional wind with the same vertical levels as 
+# # GEOSChem 
+# Vcolumn, lat_merra, lng_merra, lev_merra = \
 #     tracer_open.open_merra2_inst3_3d_asm_Nv_specifieddomain(years, months, 'V',
 #     lngmin, latmax, lngmax, latmin, pmin, pmax)
-# Vcolumn_gc = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, 
-#     lng_gc, lat_merra_gc, lng_merra_gc, Vcolumn_gc)
-# # # Load column Replay CO50, NH50 and MERRA-2 column meridional wind with the
-# # # same vertical levels as CO50 in Replay
-# # co_50_replay, lat_replay, lng_replay, lev_replay = globalo3_open.open_m2g_c90(
-# #     years, 'co_50', 1000., 800., lngmin, latmax, lngmax, latmin)
-# # nh_50_replay, lat_replay, lng_replay, lev_replay = globalo3_open.open_m2g_c90(
-# # years, 'nh_50', 900., 800., lngmin, latmax, lngmax, latmin)
-# # Vcolumn_replay, lat_merra_replay, lng_merra_replay, lev_merra_replay = \
-# #     globalo3_open.open_merra2u_specifieddomain(years, 'V', 1000., 800., lngmin, 
-# #     latmax, lngmax, latmin)
-# # co_50_replay = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, 
-# #     lng_gc, lat_replay, lng_replay, co_50_replay, checkplot='yes')
-# # nh_50_replay = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, 
-# #     lng_gc, lat_replay, lng_replay, nh_50_replay, checkplot='yes')
-# # Vcolumn_replay = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, 
-# #     lng_gc, lat_merra_replay, lng_merra_replay, Vcolumn_replay, 
-# #     checkplot='yes')
+# Vcolumn = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, 
+#     lng_gc, lat_merra, lng_merra, Vcolumn)
 # # Open MERRA-2 column zonal wind at ~500 hPa to identify the eddy-driven jet
 # edj, lat_edj, lng_edj, lev_edj = \
 #     tracer_open.open_merra2_inst3_3d_asm_Nv_specifieddomain(years, months, 'U', 
@@ -200,6 +171,427 @@ TRAC_80_90, lat_gc, lng_gc, lev_gc = \
 # # Find distance from the jet where positive distances imply that the jet is
 # # north of a particular location
 # edj_dist = tracer_calculate.determine_jetdist(edj, lat_gc, lng_gc)
+# # Load GEOSCHem PM2.5 and O3 
+# O3, lat_gc_c, lng_gc_c, lev_gc_c = tracer_open.open_geoschem([2008], months, 
+#     'merra2_4x5_tropchem', 'SpeciesConc', 'SpeciesConc_O3', latmin, latmax, 
+#     lngmin, lngmax, 985., 1000.)
+# PM25, lat_gc_c, lng_gc_c, lev_gc_c = tracer_open.open_geoschem([2008], months, 
+#     'merra2_4x5_tropchem', 'AerosolMass', 'PM25', latmin, latmax, lngmin, 
+#     lngmax, 985., 1000.)
+# O3 = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, 
+#     lng_gc, lat_gc_c, lng_gc_c, O3[:,0]*1e9)
+# PM25 = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, 
+#     lng_gc, lat_gc_c, lng_gc_c, PM25[:,0])
+
+"""O3, NOX, AND CO-JET RELATIONSHIPS"""
+# # Load Northern Hemisphere HindcastMR2 GMI CTM O3, CO, and NOx
+# lat_gmi, lng_gmi, times_gmi, o3_gmi = \
+#     globalo3_open.open_overpass2_specifieddomain([2008, 2009, 2010], 
+#     ['jun', 'jul', 'aug'], -1., 90., 0., 360., 'O3', 'HindcastMR2')
+# o3_gmi = o3_gmi*1e9
+# lat_gmi, lng_gmi, times_gmi, co_gmi = \
+#     globalo3_open.open_overpass2_specifieddomain([2008, 2009, 2010], 
+#     ['jun', 'jul', 'aug'], -1., 90., 0., 360., 'CO', 'HindcastMR2')
+# co_gmi = co_gmi*1e9
+# lat_gmi, lng_gmi, times_gmi, no_gmi = \
+#     globalo3_open.open_overpass2_specifieddomain([2008, 2009, 2010], 
+#     ['jun', 'jul', 'aug'], -1., 90., 0., 360., 'NO', 'HindcastMR2')
+# no_gmi = no_gmi*1e9
+# lat_gmi, lng_gmi, times_gmi, no2_gmi = \
+#     globalo3_open.open_overpass2_specifieddomain([2008, 2009, 2010], 
+#     ['jun', 'jul', 'aug'], -1., 90., 0., 360., 'NO2', 'HindcastMR2')
+# no2_gmi = no2_gmi*1e9
+# nox_gmi = no_gmi+no2_gmi
+# # Open MERRA-2 column zonal wind at ~500 hPa to identify the eddy-driven jet
+# edj, lat_edj, lng_edj, lev_edj = \
+#     tracer_open.open_merra2_inst3_3d_asm_Nv_specifieddomain([2008, 2009, 2010], 
+#     ['jun', 'jul', 'aug'], 'U', 0., 90., 360., -1., 487., 526., 
+#     operation='mean')
+# # Degrade to resolution of GEOSChem    
+# edj = globalo3_open.interpolate_merra_to_ctmresolution(lat_gmi, lng_gmi, 
+#     lat_edj, lng_edj, edj)
+# # Subset in mid-latitudes
+# edj, lat_edj, lng_edj = globalo3_calculate.find_grid_in_bb(edj, lat_gmi, 
+#     lng_gmi, 0., 360., 20., 70.)
+# # Determine jet latitude
+# edj = tracer_calculate.find_jetlatitude(edj, lat_edj, lng_edj)
+# edj_dist = tracer_calculate.determine_jetdist(edj, lat_gmi, lng_gmi)
+# labels = ['nox', 'o3', 'co']
+# titles = ['NO$_{x,\:PW}$ - NO$_{x,\:EW}$', 'O$_{3,\:PW}$ - O$_{3,\:EW}$', 
+#     'CO$_{PW}$ - CO$_{EW}$']
+# clevs = [np.linspace(-0.5, 0.5, 9), np.linspace(-8, 8, 9), 
+#     np.linspace()]
+# for i, species in enumerate([nox_gmi, o3_gmi, co_gmi]):
+#     r_speciesjet = globalo3_calculate.calculate_r(species, edj_dist, lat_gmi, 
+#         lng_gmi)
+#     significance_r_speciesjet = \
+#         globalo3_calculate.calculate_r_significance(species, edj_dist, 
+#         r_speciesjet, lat_gmi, lng_gmi)
+#     (eqjet_lat, eqjet_lat_var, pwjet_lat, pwjet_lat_var, pwjet_species, 
+#         eqjet_species) = globalo3_calculate.segregate_field_bylat(species, 
+#         lng_gmi, edj, np.arange(0, len(species), 1))
+#     nhmap(lat_gmi, 
+#         lng_gmi, 
+#         pwjet_species-eqjet_species,
+#         titles[i],
+#         '[ppbv]', 
+#         np.linspace(-30, 30, 11),
+#         'coolwarm', 
+#         'pwjet-eqjet_%s_gmi_sfc'%labels[i],
+#         extend='both', 
+#         hatch=significance_r_speciesjet,
+#         ebar=edj)
+
+"""O3-JET RELATIONSHIPS (MAPS AND ZONAL-MEAN FLUX) ON DAILY, MONTHLY, AND 
+   SEASONAL TIMESCALES"""
+# import pandas as pd
+# import sys
+# sys.path.append('/Users/ghkerr/phd/globalo3/')
+# import globalo3_open
+# months_str = ['jun', 'jul', 'aug']
+# years = np.arange(2000, 2011, 1)
+# # Load Northern Hemisphere HindcastMR2 GMI CTM O3 
+# lat_gmi, lng_gmi, times_gmi, o3_gmi = \
+#     globalo3_open.open_overpass2_specifieddomain(years, 
+#     ['jun', 'jul', 'aug'], -1., 90., 0., 360., 'O3', 'HindcastMR2')
+# o3_gmi = o3_gmi*1e9
+# # Open MERRA-2 column zonal wind at ~500 hPa to identify the eddy-driven jet
+# edj, lat_edj, lng_edj, lev_edj = \
+#     tracer_open.open_merra2_inst3_3d_asm_Nv_specifieddomain(years, 
+#     ['jun', 'jul', 'aug'], 'U', 0., 90., 360., -1., 487., 526., 
+#     operation='mean')
+# # Degrade to resolution of GEOSChem    
+# edj = globalo3_open.interpolate_merra_to_ctmresolution(lat_gmi, lng_gmi, 
+#     lat_edj, lng_edj, edj)
+# # Subset in mid-latitudes
+# edj, lat_edj, lng_edj = globalo3_calculate.find_grid_in_bb(edj, lat_gmi, 
+#     lng_gmi, 0., 360., 20., 70.)
+# # Determine jet latitude
+# edj = tracer_calculate.find_jetlatitude(edj, lat_edj, lng_edj)
+# edj_dist = tracer_calculate.determine_jetdist(edj, lat_gmi, lng_gmi)
+# # Load MERRA-2 near-surface meridional wind at the lowest reanalysis level
+# Vcolumn, lat_merra, lng_merra, lev_merra_full = \
+#     tracer_open.open_merra2_inst3_3d_asm_Nv_specifieddomain(years, ['jun', 
+#     'jul', 'aug'], 'V', 0., 90., 360., -1., 800., 1005.)
+# Vcolumn = globalo3_open.interpolate_merra_to_ctmresolution(lat_gmi, 
+#     lng_gmi, lat_merra, lng_merra, Vcolumn)
+# # Load MERRA-2 temperature at the surface 
+# Tsfc, lat_merra, lng_merra, lev_merra = \
+#     tracer_open.open_merra2_inst3_3d_asm_Nv_specifieddomain(years,
+#     ['jun', 'jul', 'aug'], 'T', 0., 90., 360., -1., 985., 1005.)
+# Tsfc = globalo3_open.interpolate_merra_to_ctmresolution(lat_gmi, 
+#     lng_gmi, lat_merra, lng_merra, Tsfc)
+# # Find summer days
+# o3_days = pd.date_range(start='2000-06-01', end='2010-08-31')
+# where_jja = np.where((o3_days.month.isin([6,7,8])==True) & 
+#                       (o3_days.year.isin(years)))[0]
+# o3_days = o3_days[where_jja] 
+# # Reshape into on monthly, seasonal chunks
+# o3_yearly, o3_monthly = [], []
+# edj_dist_yearly, edj_dist_monthly = [], []
+# edj_yearly, edj_monthly = [], []
+# Vcolumn_yearly, Vcolumn_monthly = [], []
+# Tsfc_yearly, Tsfc_monthly = [], []
+# for year in years:
+#     where_yr = np.where(o3_days.year==year)[0]
+#     # Calculate seasonal average for year of interest
+#     o3_yearly.append(np.nanmean(o3_gmi[where_yr], axis=0))
+#     edj_dist_yearly.append(np.nanmean(edj_dist[where_yr], axis=0))
+#     edj_yearly.append(np.nanmean(edj[where_yr], axis=0))
+#     Vcolumn_yearly.append(np.nanmean(Vcolumn[where_yr], axis=0))
+#     Tsfc_yearly.append(np.nanmean(Tsfc[where_yr], axis=0))    
+#     for month in np.arange(6, 9, 1):
+#         where_mon = np.where((o3_days.year==year) & 
+#                               (o3_days.month==month))[0]
+#         o3_monthly.append(np.nanmean(o3_gmi[where_mon], axis=0))
+#         edj_dist_monthly.append(np.nanmean(edj_dist[where_mon], axis=0))
+#         edj_monthly.append(np.nanmean(edj[where_mon], axis=0))
+#         Vcolumn_monthly.append(np.nanmean(Vcolumn[where_mon], axis=0))
+#         Tsfc_monthly.append(np.nanmean(Tsfc[where_mon], axis=0))        
+# # Daily, monthly, and seasonal jet-O3, jet-V, O3-T correlation and PW-EW composites
+# # Daily jet-O3
+# r_o3jet_daily = globalo3_calculate.calculate_r(o3_gmi, edj_dist, lat_gmi, 
+#     lng_gmi)
+# significance_r_o3jet_daily = \
+#     globalo3_calculate.calculate_r_significance(o3_gmi, edj_dist, 
+#     r_o3jet_daily, lat_gmi, lng_gmi)
+# (eqjet_lat_daily, eqjet_lat_var_daily, pwjet_lat_daily,
+# pwjet_lat_var_daily, pwjet_o3_daily, eqjet_o3_daily) = \
+#     globalo3_calculate.segregate_field_bylat(o3_gmi, lng_gmi, edj, 
+#     np.arange(0, len(o3_gmi), 1))
+# nhmap(lat_gmi, 
+#     lng_gmi, 
+#     pwjet_o3_daily-eqjet_o3_daily,
+#     'O$_{3,\:PW}$ - O$_{3,\:EW}$',
+#     '[ppbv]', 
+#     np.linspace(-8, 8, 9), 
+#     'coolwarm', 
+#     'pwjet-eqjet_dailyo3_gmi_2000-2010',
+#     extend='both', 
+#     hatch=significance_r_o3jet_daily,
+#     ebar=edj)
+# # Daily jet-V
+# r_Vjet_daily = globalo3_calculate.calculate_r(np.nanmean(Vcolumn, axis=1), 
+#     edj_dist, lat_gmi, lng_gmi)
+# significance_r_Vjet_daily = \
+#     globalo3_calculate.calculate_r_significance(np.nanmean(Vcolumn, axis=1),  
+#     edj_dist, r_Vjet_daily, lat_gmi, lng_gmi)
+# (eqjet_lat_daily, eqjet_lat_var_daily, pwjet_lat_daily,
+# pwjet_lat_var_daily, pwjet_V_daily, eqjet_V_daily) = \
+#     globalo3_calculate.segregate_field_bylat(np.nanmean(Vcolumn, axis=1),   
+#     lng_gmi, edj, np.arange(0, len(Vcolumn), 1))
+# nhmap(lat_gmi, 
+#     lng_gmi, 
+#     pwjet_V_daily-eqjet_V_daily,
+#     'V$_{PW}$ - V$_{EW}$',
+#     '[m s$^{-1}$]', 
+#     np.linspace(-5, 5, 11), 
+#     'coolwarm', 
+#     'pwjet-eqjet_daily_v_mean1000-800hPa_2000-2010',
+#     extend='both', 
+#     hatch=significance_r_Vjet_daily,
+#     ebar=edj)
+# # Daily O3-T
+# r_to3_daily = globalo3_calculate.calculate_r(np.nanmean(Tsfc, axis=1), 
+#     o3_gmi, lat_gmi, lng_gmi)
+# significance_r_to3_daily = \
+#     globalo3_calculate.calculate_r_significance(np.nanmean(Tsfc, axis=1),  
+#     o3_gmi, r_to3_daily, lat_gmi, lng_gmi)
+# nhmap(lat_gmi, 
+#     lng_gmi, 
+#     r_to3_daily,
+#     'r(T, O$_{3}$)',
+#     '[$\cdot$]', 
+#     np.linspace(-1., 1., 11), 
+#     'coolwarm', 
+#     'r_t_985hPa_o3_gmi_daily_2000-2010',
+#     extend='neither', 
+#     hatch=significance_r_to3_daily,
+#     ebar=edj)      
+# Monthly jet-O3
+# r_o3jet_monthly = globalo3_calculate.calculate_r(np.array(o3_monthly),
+#     np.array(edj_dist_monthly), lat_gmi, lng_gmi)
+# significance_r_o3jet_monthly = \
+#     globalo3_calculate.calculate_r_significance(np.array(o3_monthly),
+#     np.array(edj_dist_monthly), r_o3jet_monthly, lat_gmi, lng_gmi)
+# (eqjet_lat_monthly, eqjet_lat_var_monthly, pwjet_lat_monthly,
+# pwjet_lat_var_monthly, pwjet_o3_monthly, eqjet_o3_monthly) = \
+#     globalo3_calculate.segregate_field_bylat(np.array(o3_monthly), lng_gmi, 
+#     np.array(edj_monthly), np.arange(0, len(o3_monthly), 1))
+# nhmap(lat_gmi,
+#     lng_gmi,
+#     pwjet_o3_monthly-eqjet_o3_monthly,
+#     'O$_{3,\:PW}$ - O$_{3,\:EW}$',
+#     '[ppbv]',
+#     np.linspace(-8, 8, 9),
+#     'coolwarm',
+#     'pwjet-eqjet_monthlyo3_gmi_2000-2010',
+#     extend='both',
+#     hatch=significance_r_o3jet_monthly,
+#     ebar=np.array(edj_monthly))
+# # Monthly jet-V
+# r_Vjet_monthly = globalo3_calculate.calculate_r(
+#     np.nanmean(Vcolumn_monthly, axis=1), np.array(edj_dist_monthly), lat_gmi, 
+#     lng_gmi)
+# significance_r_Vjet_monthly = \
+#     globalo3_calculate.calculate_r_significance(
+#     np.nanmean(Vcolumn_monthly, axis=1), np.array(edj_dist_monthly), 
+#     r_Vjet_monthly, lat_gmi, lng_gmi)
+# (eqjet_lat_monthly, eqjet_lat_var_monthly, pwjet_lat_monthly,
+# pwjet_lat_var_monthly, pwjet_V_monthly, eqjet_V_monthly) = \
+#     globalo3_calculate.segregate_field_bylat(
+#     np.nanmean(Vcolumn_monthly, axis=1), lng_gmi, np.array(edj_monthly),
+#     np.arange(0, len(Vcolumn_monthly), 1))
+# nhmap(lat_gmi, 
+#     lng_gmi, 
+#     pwjet_V_monthly-eqjet_V_monthly,
+#     'V$_{PW}$ - V$_{EW}$',
+#     '[m s$^{-1}$]', 
+#     np.linspace(-5, 5, 11), 
+#     'coolwarm', 
+#     'pwjet-eqjet_monthly_v_mean1000-800hPa_2000-2010',
+#     extend='both', 
+#     hatch=significance_r_Vjet_monthly,
+#     ebar=np.array(edj_monthly))
+# # Monthly O3-T
+# r_to3_monthly = globalo3_calculate.calculate_r(
+#     np.nanmean(Tsfc_monthly, axis=1), np.array(o3_monthly), lat_gmi, lng_gmi)
+# significance_r_to3_monthly = \
+#     globalo3_calculate.calculate_r_significance(
+#     np.nanmean(Tsfc_monthly, axis=1),  np.array(o3_monthly), r_to3_monthly, 
+#     lat_gmi, lng_gmi)
+# nhmap(lat_gmi, 
+#     lng_gmi, 
+#     r_to3_monthly,
+#     'r(T, O$_{3}$)',
+#     '[$\cdot$]', 
+#     np.linspace(-1., 1., 11), 
+#     'coolwarm', 
+#     'r_t_985hPa_o3_gmi_monthly_2000-2010',
+#     extend='neither', 
+#     hatch=significance_r_to3_monthly,
+#     ebar=np.array(edj_monthly))
+# Yearly jet-O3
+# r_o3jet_yearly = globalo3_calculate.calculate_r(np.array(o3_yearly), 
+#     np.array(edj_dist_yearly), lat_gmi, lng_gmi)
+# significance_r_o3jet_yearly = \
+#     globalo3_calculate.calculate_r_significance(np.array(o3_yearly), 
+#     np.array(edj_dist_yearly), r_o3jet_yearly, lat_gmi, lng_gmi)
+# (eqjet_lat_yearly, eqjet_lat_var_yearly, pwjet_lat_yearly,
+# pwjet_lat_var_yearly, pwjet_o3_yearly, eqjet_o3_yearly) = \
+#     globalo3_calculate.segregate_field_bylat(np.array(o3_yearly), lng_gmi, 
+#     np.array(edj_yearly), np.arange(0, len(o3_yearly), 1))
+# nhmap(lat_gmi, 
+#     lng_gmi, 
+#     pwjet_o3_yearly-eqjet_o3_yearly,
+#     'O$_{3,\:PW}$ - O$_{3,\:EW}$',
+#     '[ppbv]', 
+#     np.linspace(-8, 8, 9), 
+#     'coolwarm', 
+#     'pwjet-eqjet_yearlyo3_gmi_2000-2010',
+#     extend='both', 
+#     hatch=significance_r_o3jet_yearly,
+#     ebar=np.array(edj_yearly))
+# # Yearly jet-V
+# r_Vjet_yearly = globalo3_calculate.calculate_r(
+#     np.nanmean(Vcolumn_yearly, axis=1), np.array(edj_dist_yearly), lat_gmi, 
+#     lng_gmi)
+# significance_r_Vjet_yearly = \
+#     globalo3_calculate.calculate_r_significance(
+#     np.nanmean(Vcolumn_yearly, axis=1), np.array(edj_dist_yearly), 
+#     r_Vjet_yearly, lat_gmi, lng_gmi)
+# (eqjet_lat_yearly, eqjet_lat_var_yearly, pwjet_lat_yearly,
+# pwjet_lat_var_yearly, pwjet_V_yearly, eqjet_V_yearly) = \
+#     globalo3_calculate.segregate_field_bylat(
+#     np.nanmean(Vcolumn_yearly, axis=1), lng_gmi, np.array(edj_yearly),
+#     np.arange(0, len(Vcolumn_yearly), 1))
+# nhmap(lat_gmi, 
+#     lng_gmi, 
+#     pwjet_V_yearly-eqjet_V_yearly,
+#     'V$_{PW}$ - V$_{EW}$',
+#     '[m s$^{-1}$]', 
+#     np.linspace(-5, 5, 11), 
+#     'coolwarm', 
+#     'pwjet-eqjet_yearly_v_mean1000-800hPa_2000-2010',
+#     extend='both', 
+#     hatch=significance_r_Vjet_yearly,
+#     ebar=np.array(edj_yearly))
+# # Yearly O3-T
+# r_to3_yearly = globalo3_calculate.calculate_r(
+#     np.nanmean(Tsfc_yearly, axis=1), np.array(o3_yearly), lat_gmi, lng_gmi)
+# significance_r_to3_yearly = \
+#     globalo3_calculate.calculate_r_significance(
+#     np.nanmean(Tsfc_yearly, axis=1),  np.array(o3_yearly), r_to3_yearly, 
+#     lat_gmi, lng_gmi)
+# nhmap(lat_gmi, 
+#     lng_gmi, 
+#     r_to3_yearly,
+#     'r(T, O$_{3}$)',
+#     '[$\cdot$]', 
+#     np.linspace(-1., 1., 11), 
+#     'coolwarm', 
+#     'r_t_985hPa_o3_gmi_yearly_2000-2010',
+#     extend='neither', 
+#     hatch=significance_r_to3_yearly,
+#     ebar=np.array(edj_yearly))
+# Calculate zonal-mean and eddy flux for all, PW, and EW days for different 
+# averaging lengths (i.e., daily, monthly, and yearly)
+# Daily 
+# Vsfc_daily_eqjet, Vsfc_daily_pwjet, o3_gmi_daily_eqjet, o3_gmi_daily_pwjet = \
+#     globalo3_calculate.sortfield_byjetlat_column(
+#     np.reshape(Vsfc, (1012,1,92,288)), np.reshape(o3_gmi, (1012,1,92,288)),
+#     edj, lng_gmi, lat_gmi, np.array([985.]), psize=30)
+# o3_daily_mean, o3_daily_stationary, o3_daily_transient, o3_daily_total = \
+#     globalo3_calculate.meridional_flux(Vsfc[:,0], o3_gmi, o3_days, lat_gmi, 
+#     lng_gmi)
+# o3_daily_mean_pwjet, o3_daily_stationary_pwjet, o3_daily_transient_pwjet, \
+#     o3_daily_total_pwjet = globalo3_calculate.meridional_flux(
+#     Vsfc_daily_pwjet[:,0], o3_gmi_daily_pwjet[:,0], 
+#     o3_days[:len(Vsfc_daily_pwjet)], lat_gmi, lng_gmi)
+# o3_daily_mean_eqjet, o3_daily_stationary_eqjet, o3_daily_transient_eqjet, \
+#     o3_daily_total_eqjet = globalo3_calculate.meridional_flux(
+#     Vsfc_daily_eqjet[:,0], o3_gmi_daily_eqjet[:,0], 
+#     o3_days[:len(Vsfc_daily_eqjet)], lat_gmi, lng_gmi)
+# # Monthly 
+# Vsfc_monthly_eqjet, Vsfc_monthly_pwjet, o3_gmi_monthly_eqjet, \
+#     o3_gmi_monthly_pwjet = globalo3_calculate.sortfield_byjetlat_column(
+#     np.reshape(Vsfc_monthly, (33,1,92,288)), np.reshape(o3_monthly, (33,1,92,288)),
+#     np.array(edj_monthly), lng_gmi, lat_gmi, np.array([985.]), psize=30)
+# o3_monthly_mean, o3_monthly_stationary, o3_monthly_transient, \
+#     o3_monthly_total = globalo3_calculate.meridional_flux(
+#     np.array(Vsfc_monthly)[:,0], np.array(o3_monthly), 
+#     np.arange(0, len(o3_monthly), 1), lat_gmi, lng_gmi)
+# o3_monthly_mean_pwjet, o3_monthly_stationary_pwjet, o3_monthly_transient_pwjet, \
+#     o3_monthly_total_pwjet = globalo3_calculate.meridional_flux(
+#     np.array(Vsfc_monthly_pwjet)[:,0], np.array(o3_gmi_monthly_pwjet)[:,0], 
+#     o3_days[:len(Vsfc_monthly_pwjet)], lat_gmi, lng_gmi)
+# o3_monthly_mean_eqjet, o3_monthly_stationary_eqjet, o3_monthly_transient_eqjet, \
+#     o3_monthly_total_eqjet = globalo3_calculate.meridional_flux(
+#     np.array(Vsfc_monthly_eqjet)[:,0], np.array(o3_gmi_monthly_eqjet)[:,0], 
+#     o3_days[:len(Vsfc_monthly_eqjet)], lat_gmi, lng_gmi)
+# # Yearly 
+# Vsfc_yearly_eqjet, Vsfc_yearly_pwjet, o3_gmi_yearly_eqjet, \
+#     o3_gmi_yearly_pwjet = globalo3_calculate.sortfield_byjetlat_column(
+#     np.reshape(Vsfc_yearly, (11,1,92,288)), np.reshape(o3_yearly, (11,1,92,288)),
+#     np.array(edj_yearly), lng_gmi, lat_gmi, np.array([985.]), psize=30)
+# o3_yearly_mean, o3_yearly_stationary, o3_yearly_transient, \
+#     o3_yearly_total = globalo3_calculate.meridional_flux(
+#     np.array(Vsfc_yearly)[:,0], np.array(o3_yearly), 
+#     np.arange(0, len(o3_yearly), 1), lat_gmi, lng_gmi)
+# o3_yearly_mean_pwjet, o3_yearly_stationary_pwjet, o3_yearly_transient_pwjet, \
+#     o3_yearly_total_pwjet = globalo3_calculate.meridional_flux(
+#     np.array(Vsfc_yearly_pwjet)[:,0], np.array(o3_gmi_yearly_pwjet)[:,0], 
+#     o3_days[:len(Vsfc_yearly_pwjet)], lat_gmi, lng_gmi)
+# o3_yearly_mean_eqjet, o3_yearly_stationary_eqjet, o3_yearly_transient_eqjet, \
+#     o3_yearly_total_eqjet = globalo3_calculate.meridional_flux(
+#     np.array(Vsfc_yearly_eqjet)[:,0], np.array(o3_gmi_yearly_eqjet)[:,0], 
+#     o3_days[:len(Vsfc_yearly_eqjet)], lat_gmi, lng_gmi)
+# # Plot
+# total = o3_daily_total
+# mean = o3_daily_mean
+# eddy = o3_daily_stationary+o3_daily_transient_pwjet
+# pwjet_total = o3_daily_total_pwjet
+# pwjet_mean = o3_daily_mean_pwjet
+# pwjet_eddy = o3_daily_stationary_pwjet+o3_daily_transient_pwjet
+# eqjet_total = o3_daily_total_eqjet
+# eqjet_mean = o3_daily_mean_eqjet
+# eqjet_eddy = o3_daily_stationary_eqjet+o3_daily_transient_eqjet
+# f, axes = plt.subplots(1, 3, sharey=True, figsize=(8,4))
+# # All days
+# axes[0].plot(lat_gmi, total, ls='-', color='#A2C3E0', lw=2, 
+#     label='Total', zorder=2)
+# axes[0].plot(lat_gmi, mean, ls='-', color='#EF9802', lw=2, 
+#     label='Mean', zorder=3)
+# axes[0].plot(lat_gmi, eddy, ls='-', color='#3F79B7', lw=2, 
+#     label='Eddy', zorder=4)
+# # PW days  
+# axes[1].plot(lat_gmi, pwjet_total, ls='-', color='#A2C3E0', lw=2, 
+#     label='Total', zorder=2)
+# axes[1].plot(lat_gmi, pwjet_mean, ls='-', color='#EF9802', lw=2, 
+#     label='Mean', zorder=3)
+# axes[1].plot(lat_gmi, pwjet_eddy, ls='-', color='#3F79B7', lw=2, 
+#     label='Eddy', zorder=4)    
+# # EW days  
+# axes[2].plot(lat_gmi, eqjet_total, ls='-', color='#A2C3E0', lw=2, 
+#     label='Total', zorder=2)
+# axes[2].plot(lat_gmi, eqjet_mean, ls='-', color='#EF9802', lw=2, 
+#     label='Mean', zorder=3)
+# axes[2].plot(lat_gmi, eqjet_eddy, ls='-', color='#3F79B7', lw=2, 
+#     label='Eddy', zorder=4)        
+# for ax in [axes[0], axes[1], axes[2]]:
+#     ax.set_xlim([0,90])
+#     ax.set_xticks([0,30,60,90])
+#     ax.set_xlabel('Latitude [$^{\circ}$N]', fontsize=14)
+#     ax.hlines(0, xmin=ax.get_xlim()[0], xmax=ax.get_xlim()[1], zorder=1, 
+#         linestyles='--', linewidths=0.75)
+# axes[0].set_ylabel('O$_{3}$ flux [ppbv m s$^{\mathregular{-1}}$]', fontsize=14)
+# axes[0].set_title('All days', fontsize=14)
+# axes[1].set_title('PW days', fontsize=14)
+# axes[2].set_title('EW days', fontsize=14)
+# plt.subplots_adjust(left=0.2, bottom=0.15)    
+# axes[2].legend(ncol=1, frameon=False)
+# plt.savefig('/Users/ghkerr/phd/tracer/figs/'+
+#     'zonalavg_o3flux_daily_2000-2010.png', dpi=300)
 
 """GEOSCHEM TRACER-JET RELATIONSHIP MAPS"""
 # labels = ['$\chi_{0-10^{\circ}}$', '$\chi_{10-20^{\circ}}$', 
