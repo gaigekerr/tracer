@@ -113,52 +113,47 @@ import globalo3_open, globalo3_calculate
 sys.path.append('/Users/ghkerr/phd/tracer/')
 import tracer_open, tracer_calculate
 years = [2008, 2009, 2010]
-months = ['jun', 'jul', 'aug']
+jja = ['jun', 'jul', 'aug']
+djf = ['jan', 'feb', 'dec']
 latmin = 0.
 latmax = 90.
 lngmin = 0.
 lngmax = 360.
 pmin = 800.
 pmax = 1005.
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 # # Load GEOSChem tracers
-# TRAC_0_10, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, months, 
-#     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_0_10', 
-#     latmin, latmax, lngmin, lngmax, pmin, pmax)
-# TRAC_10_20, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, months, 
+# TRAC_10_20_jja, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, jja,
 #     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_10_20', 
 #     latmin, latmax, lngmin, lngmax, pmin, pmax)
-# TRAC_20_30, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, months, 
+# TRAC_20_30_jja, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, jja, 
 #     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_20_30', 
 #     latmin, latmax, lngmin, lngmax, pmin, pmax)
-# TRAC_30_40, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, months, 
+# TRAC_30_40_jja, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, jja, 
 #     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_30_40', 
 #     latmin, latmax, lngmin, lngmax, pmin, pmax)
-# TRAC_40_50, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, months, 
+# TRAC_40_50_jja, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, jja, 
 #     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_40_50', 
 #     latmin, latmax, lngmin, lngmax, pmin, pmax)
-# TRAC_50_60, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, months, 
+# TRAC_50_60_jja, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, jja, 
 #     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_50_60', 
 #     latmin, latmax, lngmin, lngmax, pmin, pmax)
-# TRAC_60_70, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, months, 
+# TRAC_60_70_jja, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, jja, 
 #     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_60_70', 
 #     latmin, latmax, lngmin, lngmax, pmin, pmax)
-# TRAC_70_80, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, months, 
+# TRAC_70_80_jja, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, jja, 
 #     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_70_80', 
-#     latmin, latmax, lngmin, lngmax, pmin, pmax)
-# TRAC_80_90, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, months, 
-#     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_80_90', 
 #     latmin, latmax, lngmin, lngmax, pmin, pmax)
 # # Load MERRA-2 column meridional wind with the same vertical levels as 
 # # GEOSChem 
 # Vcolumn, lat_merra, lng_merra, lev_merra = \
-#     tracer_open.open_merra2_inst3_3d_asm_Nv_specifieddomain(years, months, 'V',
+#     tracer_open.open_merra2_inst3_3d_asm_Nv_specifieddomain(years, jja, 'V',
 #     lngmin, latmax, lngmax, latmin, pmin, pmax)
 # Vcolumn = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, 
 #     lng_gc, lat_merra, lng_merra, Vcolumn)
 # # Open MERRA-2 column zonal wind at ~500 hPa to identify the eddy-driven jet
 # edj, lat_edj, lng_edj, lev_edj = \
-#     tracer_open.open_merra2_inst3_3d_asm_Nv_specifieddomain(years, months, 'U', 
+#     tracer_open.open_merra2_inst3_3d_asm_Nv_specifieddomain(years, jja, 'U', 
 #     lngmin, latmax, lngmax, latmin, 487., 526., operation='mean')
 # # Degrade to resolution of GEOSChem    
 # edj = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, lng_gc, lat_edj, 
@@ -171,17 +166,150 @@ pmax = 1005.
 # # Find distance from the jet where positive distances imply that the jet is
 # # north of a particular location
 # edj_dist = tracer_calculate.determine_jetdist(edj, lat_gc, lng_gc)
-# # Load GEOSCHem PM2.5 and O3 
-# O3, lat_gc_c, lng_gc_c, lev_gc_c = tracer_open.open_geoschem([2008], months, 
-#     'merra2_4x5_tropchem', 'SpeciesConc', 'SpeciesConc_O3', latmin, latmax, 
-#     lngmin, lngmax, 985., 1000.)
-# PM25, lat_gc_c, lng_gc_c, lev_gc_c = tracer_open.open_geoschem([2008], months, 
-#     'merra2_4x5_tropchem', 'AerosolMass', 'PM25', latmin, latmax, lngmin, 
-#     lngmax, 985., 1000.)
-# O3 = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, 
-#     lng_gc, lat_gc_c, lng_gc_c, O3[:,0]*1e9)
-# PM25 = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, 
-#     lng_gc, lat_gc_c, lng_gc_c, PM25[:,0])
+# # Load Northern Hemisphere HindcastMR2 GMI CTM O3 for JJA
+# lat_gmi, lng_gmi, times_gmi, o3_gmi = \
+#     globalo3_open.open_overpass2_specifieddomain([2008, 2009, 2010], 
+#     ['jun', 'jul', 'aug'], -1., 90., 0., 360., 'O3', 'HindcastMR2')
+# o3_gmi = o3_gmi*1e9
+# # Degrade GMI to resolution of GEOSChem    
+# o3_gmi = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, lng_gc, 
+#     lat_gmi, lng_gmi, o3_gmi)
+# # Repeat above but for DJF
+# TRAC_10_20_djf, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, djf, 
+#     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_10_20', 
+#     latmin, latmax, lngmin, lngmax, pmin, pmax)
+# TRAC_20_30_djf, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, djf, 
+#     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_20_30', 
+#     latmin, latmax, lngmin, lngmax, pmin, pmax)
+# TRAC_30_40_djf, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, djf, 
+#     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_30_40', 
+#     latmin, latmax, lngmin, lngmax, pmin, pmax)
+# TRAC_40_50_djf, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, djf, 
+#     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_40_50', 
+#     latmin, latmax, lngmin, lngmax, pmin, pmax)
+# TRAC_50_60_djf, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, djf, 
+#     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_50_60', 
+#     latmin, latmax, lngmin, lngmax, pmin, pmax)
+# TRAC_60_70_djf, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, djf, 
+#     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_60_70', 
+#     latmin, latmax, lngmin, lngmax, pmin, pmax)
+# TRAC_70_80_djf, lat_gc, lng_gc, lev_gc = tracer_open.open_geoschem(years, djf, 
+#     'merra2_2x25_RnPbBe_co50', 'SpeciesConc', 'SpeciesConc_TRAC50_70_80', 
+#     latmin, latmax, lngmin, lngmax, pmin, pmax)
+# Vcolumn_djf, lat_merra_gc, lng_merra_gc, lev_merra_gc = \
+#     tracer_open.open_merra2_inst3_3d_asm_Nv_specifieddomain(years, djf, 'V',
+#     lngmin, latmax, lngmax, latmin, pmin, pmax)
+# Vcolumn_djf = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, 
+#     lng_gc, lat_merra_gc, lng_merra_gc, Vcolumn_djf)    
+# # Open MERRA-2 column zonal wind at ~500 hPa to identify the eddy-driven jet
+# edj_djf, lat_edj, lng_edj, lev_edj = \
+#     tracer_open.open_merra2_inst3_3d_asm_Nv_specifieddomain(years, djf, 'U', 
+#     lngmin, latmax, lngmax, latmin, 487., 526., operation='mean')
+# # Degrade to resolution of GEOSChem    
+# edj_djf = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, lng_gc, 
+#     lat_edj, lng_edj, edj_djf)
+# # Subset fields in mid-latitudes
+# edj_djf, lat_edj, lng_edj = globalo3_calculate.find_grid_in_bb(edj_djf, lat_gc, 
+#     lng_gc, 0., 360., 20., 70.)
+# # Determine jet latitude
+# edj_djf = tracer_calculate.find_jetlatitude(edj_djf, lat_edj, lng_edj)
+# # Find distance from the jet where positive distances imply that the jet is
+# # north of a particular location
+# edj_dist_djf = tracer_calculate.determine_jetdist(edj_djf, lat_gc, lng_gc)
+# lat_gmi, lng_gmi, times_gmi_djf, o3_gmi_djf = \
+#     globalo3_open.open_overpass2_specifieddomain([2008, 2009, 2010], 
+#     ['jan', 'feb', 'dec'], -1., 90., 0., 360., 'O3', 'HindcastMR2')
+# o3_gmi_djf = o3_gmi_djf*1e9
+# o3_gmi_djf = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, lng_gc, 
+#     lat_gmi, lng_gmi, o3_gmi_djf)
+
+
+
+
+
+
+
+
+"""JET-PM2.5 RELATIONSHIP """
+# # Load PM2.5 from Replay 
+# import netCDF4 as nc
+# import glob
+# import sys
+# sys.path.append('/Users/ghkerr/phd/utils/')
+# from geo_idx import geo_idx
+# mfstring = 'MERRA2_GMI.tavg1_2d_aer_Nx.*.nc4'
+# infiles = glob.glob('/Users/ghkerr/Desktop/junkcodes/pm25/'+mfstring)
+# infiles.sort()
+# pm25_replay = []
+# for infile in infiles:
+#     infile = nc.Dataset(infile, 'r')
+#     lat_replay = infile.variables['lat'][:]
+#     lng_replay = infile.variables['lon'][:]
+#     # Convert longitude from (-180-180) to (0-360)
+#     lng_replay = lng_replay%360
+#     # Shift grid such that it spans (0-360) rather than (180-360, 
+#     # 0-180)
+#     lng_replay = np.roll(lng_replay,int(lng_replay.shape[0]/2))
+#     lng_replay[0] = 0.
+#     latmini = geo_idx(latmin,lat_replay)
+#     latmaxi = geo_idx(latmax,lat_replay)
+#     lngmini = geo_idx(lngmin,lng_replay)
+#     lngmaxi = geo_idx(lngmax,lng_replay)    
+#     # Restrict coordinates over focus region 
+#     lat_replay = lat_replay[latmini:latmaxi+1]
+#     lng_replay = lng_replay[lngmini:lngmaxi+1]     
+#     # Extract variable for the month
+#     pm25_month = infile.variables['PM25'][:]
+#     # Roll grid similar to longitude grid
+#     pm25_month = np.roll(pm25_month, int(pm25_month.shape[-1]/2), 
+#         axis=np.where(np.array(pm25_month.shape)==lng_replay.shape[0])[0][0])
+#     pm25_replay.append(pm25_month.data[:,latmini:latmaxi+1, lngmini:lngmaxi+1])
+# pm25_replay = np.vstack(pm25_replay)
+# pm25_replay = pm25_replay*1.e9
+# pm25_replay = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, lng_gc, 
+#     lat_replay, lng_replay, pm25_replay)
+# # Jet-PM2.5 correlations, significance, and PW-EW significance
+# r_pm25jet = globalo3_calculate.calculate_r(pm25_replay, edj_dist, lat_gc, 
+#     lng_gc)
+# significance_r_pm25jet = \
+#     globalo3_calculate.calculate_r_significance(pm25_replay, edj_dist, 
+#     r_pm25jet, lat_gc, lng_gc)
+# (eqjet_lat, eqjet_lat_var, pwjet_lat,pwjet_lat_var, 
+#  pwjet_pm25_replay, eqjet_pm25_replay) = \
+#     globalo3_calculate.segregate_field_bylat(pm25_replay, lng_gc, edj, 
+#     np.arange(0, len(pm25_replay), 1))
+# nhmap(lat_gc,
+#     lng_gc, 
+#     pwjet_pm25_replay-eqjet_pm25_replay,
+#     'PM$_{2.5,\:PW}$ - PM$_{2.5,\:EW}$',
+#     '[$\mu$g m$^{-3}$]', 
+#     np.linspace(-12, 12, 9), 
+#     'coolwarm', 
+#     'pwjet-eqjet_pm25_replay_2008-2010',
+#     extend='both', 
+#     hatch=significance_r_pm25jet,
+#     ebar=edj)
+# nhmap(lat_gc,
+#     lng_gc, 
+#     np.nanmean(pm25_replay, axis=0),
+#     'PM$_{2.5}$',
+#     '[$\cdot$]', 
+#     np.linspace(0, 50, 11),
+#     'OrRd', 
+#     'meanpm25',
+#     extend='max', 
+#     ebar=edj)
+# nhmap(lat_gc,
+#     lng_gc, 
+#     r_pm25jet,
+#     'r(PM$_{2.5}$, $\phi_{jet}$)',
+#     '[$\cdot$]', 
+#     np.linspace(-0.5, 0.5, 11),
+#     'coolwarm', 
+#     'r_pm25jet',
+#     extend='neither', 
+#     hatch=significance_r_pm25jet,
+#     ebar=edj)
 
 """O3, NOX, AND CO-JET RELATIONSHIPS"""
 # # Load Northern Hemisphere HindcastMR2 GMI CTM O3, CO, and NOx
@@ -977,132 +1105,6 @@ JET-TRACER RELATIONSHIP"""
 #         'zonalavg_%s_grad%s_rjet%s.png'%(filename[i],filename[i],filename[i]), 
 #         dpi=350)
 
-"""1000-200 HPA V ANOMALY AND U WIND FOR NORTH AMERICA"""
-# Ucolumnfull_gc, lat_merra_gc, lng_merra_gc, lev_merrafull_gc = \
-#     tracer_open.open_merra2_inst3_3d_asm_Nv_specifieddomain(years, months, 'U',
-#     lngmin, latmax, lngmax, latmin, 150., 1005.)
-# Ucolumnfull_gc = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, 
-#     lng_gc, lat_merra_gc, lng_merra_gc, Ucolumnfull_gc)
-# Vcolumnfull_gc, lat_merra_gc, lng_merra_gc, lev_merrafull_gc = \
-#     tracer_open.open_merra2_inst3_3d_asm_Nv_specifieddomain(years, months, 'V',
-#     lngmin, latmax, lngmax, latmin, 150., 1005.)
-# Vcolumnfull_gc = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, 
-#     lng_gc, lat_merra_gc, lng_merra_gc, Vcolumnfull_gc)
-# # Select fields over North America (125-60 deg W) (i.e., 235-300 deg E)
-# Vna = Vcolumnfull_gc[:,:,:,94:121]
-# Vnaavg = np.nanmean(Vna, axis=tuple((0,3)))
-# Una = Ucolumnfull_gc[:,:,:,94:121]
-# Unaavg = np.nanmean(Una, axis=tuple((0,3)))
-# edjna = edj[:,94:121]
-# edjnaavg = np.nanmean(edjna, axis=-1)
-# # Generate dates to label plots
-# import datetime
-# start_date = datetime.date(2008, 6, 1)
-# end_date = datetime.date(2010, 8, 31)
-# dates_all = [start_date + datetime.timedelta(n) for n in 
-#     range(int((end_date-start_date).days))]
-# dates = []
-# for date in dates_all:
-#     if (date.month == 6) or (date.month == 7) or (date.month == 8):
-#         dates.append(date)
-# for day in np.arange(0, 276, 1):
-#     fig = plt.figure()
-#     ax = plt.subplot2grid((1,1),(0,0))
-#     ax.set_title('%s\nZonal average over North America (235-300$^{\circ}$E)'
-#         %dates[day])
-#     clevs = np.linspace(-5, 5, 11)
-#     # V
-#     cf = ax.contourf(lat_gc, lev_merrafull_gc, 
-#         np.nanmean(Vna[day], axis=-1)-Vnaavg, clevs, cmap=plt.get_cmap('bwr'), 
-#         extend='both')
-#     # Eddy-driven jet
-#     ax.errorbar(np.nanmean(edjna[day]), 500., 
-#         xerr=np.nanstd(edjna[day]), zorder=10, color='k', markersize=3, 
-#         elinewidth=1.25, ecolor='k', fmt='o')
-#     CS = ax.contour(lat_gc, lev_merrafull_gc, 
-#         np.nanmean(Una[day], axis=-1),
-#         [0, 5, 10, 15, 20, 25], colors='k')
-#     ax.clabel(CS, fontsize=9, fmt='%1d', inline=1)    
-#     ax.set_xlim([25, 75])
-#     ax.set_xlabel('Latitude [$^{\circ}$N]')
-#     ax.set_ylabel('Pressure [hPa]')
-#     plt.colorbar(cf, label='$V - \overline{V}$ [m s$^{-1}$]')
-#     plt.gca().invert_yaxis()
-#     plt.savefig('/Users/ghkerr/Desktop/tempjet/zana_%s.jpg'%str(day).zfill(3), 
-#         dpi=200)
-#     plt.show()
-# # JJA average
-# fig = plt.figure()
-# ax = plt.subplot2grid((1,1),(0,0))
-# clevs = np.linspace(-2, 2, 9)
-# cf = ax.contourf(lat_gc, lev_merrafull_gc, Vnaavg, clevs, 
-#     cmap=plt.get_cmap('bwr'), extend='both')
-# CS = ax.contour(lat_gc, lev_merrafull_gc, Unaavg, [0, 5, 10, 15, 20, 25], 
-#     colors='k')
-# ax.clabel(CS, fontsize=9, fmt='%1d', inline=1)    
-# ax.set_xlim([25, 75])
-# ax.set_xlabel('Latitude [$^{\circ}$N]')
-# ax.set_ylabel('Pressure [hPa]')
-# plt.colorbar(cf, label='$\overline{V}$ [m s$^{-1}$]')
-# plt.gca().invert_yaxis()
-# plt.savefig('/Users/ghkerr/Desktop/trial222.png', dpi=350)
-
-"""DJF TRACERS AND JET"""
-# years = [2008, 2009, 2010]
-# djf = ['jan', 'feb', 'dec']
-# # Load column GEOSChem CO50 and MERRA-2 column meridional wind with the 
-# # same vertical levels as CO50 in GEOSChem
-# co_50_gc_djf, lat_gc, lng_gc, lev_gc = \
-#     tracer_open.open_geoschem_merra2_2x25_RnPbBe(years, djf, 
-#     'SpeciesConc_CO_50', latmin, latmax, lngmin, lngmax, 800., 1000.)
-# Vcolumn_gc_djf, lat_merra_gc, lng_merra_gc, lev_merra_gc = \
-#     tracer_open.open_merra2_inst3_3d_asm_Nv_specifieddomain(years, djf, 'V',
-#     lngmin, latmax, lngmax, latmin, pmin, pmax)
-# Vcolumn_gc_djf = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, 
-#     lng_gc, lat_merra_gc, lng_merra_gc, Vcolumn_gc_djf)
-# TRAC_0_10_djf, lat_gc, lng_gc, lev_gc = \
-#     tracer_open.open_geoschem_merra2_2x25_RnPbBe(years, djf, 
-#     'SpeciesConc_TRAC50_0_10', latmin, latmax, lngmin, lngmax, pmin, pmax)
-# TRAC_10_20_djf, lat_gc, lng_gc, lev_gc = \
-#     tracer_open.open_geoschem_merra2_2x25_RnPbBe(years, djf, 
-#     'SpeciesConc_TRAC50_10_20', latmin, latmax, lngmin, lngmax, pmin, pmax)
-# TRAC_20_30_djf, lat_gc, lng_gc, lev_gc = \
-#     tracer_open.open_geoschem_merra2_2x25_RnPbBe(years, djf, 
-#     'SpeciesConc_TRAC50_20_30', latmin, latmax, lngmin, lngmax, pmin, pmax)
-# TRAC_30_40_djf, lat_gc, lng_gc, lev_gc = \
-#     tracer_open.open_geoschem_merra2_2x25_RnPbBe(years, djf, 
-#     'SpeciesConc_TRAC50_30_40', latmin, latmax, lngmin, lngmax, pmin, pmax)
-# TRAC_40_50_djf, lat_gc, lng_gc, lev_gc = \
-#     tracer_open.open_geoschem_merra2_2x25_RnPbBe(years, djf, 
-#     'SpeciesConc_TRAC50_40_50', latmin, latmax, lngmin, lngmax, pmin, pmax)
-# TRAC_50_60_djf, lat_gc, lng_gc, lev_gc = \
-#     tracer_open.open_geoschem_merra2_2x25_RnPbBe(years, djf, 
-#     'SpeciesConc_TRAC50_50_60', latmin, latmax, lngmin, lngmax, pmin, pmax)
-# TRAC_60_70_djf, lat_gc, lng_gc, lev_gc = \
-#     tracer_open.open_geoschem_merra2_2x25_RnPbBe(years, djf, 
-#     'SpeciesConc_TRAC50_60_70', latmin, latmax, lngmin, lngmax, pmin, pmax)
-# TRAC_70_80_djf, lat_gc, lng_gc, lev_gc = \
-#     tracer_open.open_geoschem_merra2_2x25_RnPbBe(years, djf, 
-#     'SpeciesConc_TRAC50_70_80', latmin, latmax, lngmin, lngmax, pmin, pmax)
-# TRAC_80_90_djf, lat_gc, lng_gc, lev_gc = \
-#     tracer_open.open_geoschem_merra2_2x25_RnPbBe(years, djf, 
-#     'SpeciesConc_TRAC50_80_90', latmin, latmax, lngmin, lngmax, pmin, pmax)
-# # Open MERRA-2 column zonal wind at ~500 hPa to identify the eddy-driven jet
-# edj_djf, lat_edj, lng_edj, lev_edj = \
-#     tracer_open.open_merra2_inst3_3d_asm_Nv_specifieddomain(years, djf, 'U', 
-#     lngmin, latmax, lngmax, latmin, 487., 526., operation='mean')
-# # Degrade to resolution of GEOSChem    
-# edj_djf = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, lng_gc, 
-#     lat_edj, lng_edj, edj_djf)
-# # Subset fields in mid-latitudes
-# edj_djf, lat_edj, lng_edj = globalo3_calculate.find_grid_in_bb(edj_djf, lat_gc, 
-#     lng_gc, 0., 360., 20., 70.)
-# # Determine jet latitude
-# edj_djf = tracer_calculate.find_jetlatitude(edj_djf, lat_edj, lng_edj)
-# # Find distance from the jet where positive distances imply that the jet is
-# # north of a particular location
-# edj_dist_djf = tracer_calculate.determine_jetdist(edj_djf, lat_gc, lng_gc)
-
 """JJA AND DJF EDDY AND MEAN MERIDIONAL FLUXES FOR COMPARISON WITH HARTMANN 
    (2007)"""
 # import numpy as np
@@ -1246,135 +1248,6 @@ JET-TRACER RELATIONSHIP"""
 # plt.subplots_adjust(hspace=0.4, wspace=0.25)
 # plt.savefig('/Users/ghkerr/Desktop/hartmann_flux.png', dpi=300)
 
-"""xxx """
-# # Indices corresponding to the "mid-latitudes"
-# mls = 0 # lat_gc[15] = 30 deg N
-# mln = 45 # lat_gc[35] = 70 deg N
-# # For JJA fields
-# eddy_ml, mean_ml = [], []
-# pweddy_ml, pwmean_ml = [], []
-# eqeddy_ml, eqmean_ml = [], []
-# for tracer in [TRAC_0_10, TRAC_10_20, TRAC_20_30, TRAC_30_40, 
-#     TRAC_40_50, TRAC_50_60, TRAC_60_70, TRAC_70_80, TRAC_80_90]:
-#     # Calculate components of zonal- and time-mean transport for tracer for 
-#     # all days
-#     tracer_total, tracer_mean, tracer_eddy = \
-#         globalo3_calculate.verticallyintegrated_meridional_flux(
-#         tracer, Vcolumn_gc, np.arange(0, len(tracer), 1), 
-#         lat_gc, lng_gc, lev_gc, 955., 800., (28/28.97))
-#     eddy_ml.append(np.sum(np.array(tracer_eddy)[mls:mln]))
-#     mean_ml.append(np.sum(np.array(tracer_mean)[mls:mln]))
-#     # Find (PW - EW) jet composites
-#     eqjet_lat, eqjet_lat_var, pwjet_lat, pwjet_lat_var, pwjet_tracer, \
-#         eqjet_tracer = globalo3_calculate.segregate_field_bylat(
-#         np.nanmean(tracer, axis=1), lng_gc, edj, np.arange(0, len(tracer), 1))
-#     # Separate into PW and EW days
-#     Vcolumn_gc_eqjet, Vcolumn_gc_pwjet, tracer_eqjet, tracer_pwjet = \
-#         globalo3_calculate.sortfield_byjetlat_column(Vcolumn_gc, tracer, 
-#         edj, lng_gc, lat_gc, lev_gc, psize=30) 
-#     # Zonal- and time-mean transport for PW jet 
-#     pwjet_tracer_total, pwjet_tracer_mean, pwjet_tracer_eddy = \
-#         globalo3_calculate.verticallyintegrated_meridional_flux(
-#         tracer_pwjet, Vcolumn_gc_pwjet, np.arange(0, len(tracer_pwjet), 1), 
-#         lat_gc, lng_gc, lev_gc, 955., 800., (28/28.97))        
-#     # Zonal- and time-mean transport for EW jet 
-#     eqjet_tracer_total, eqjet_tracer_mean, eqjet_tracer_eddy = \
-#         globalo3_calculate.verticallyintegrated_meridional_flux(
-#         tracer_eqjet, Vcolumn_gc_eqjet, np.arange(0, len(tracer_eqjet), 1), 
-#         lat_gc, lng_gc, lev_gc, 955., 800., (28/28.97))    
-#     pweddy_ml.append(np.sum(np.array(pwjet_tracer_eddy)[mls:mln]))
-#     pwmean_ml.append(np.sum(np.array(pwjet_tracer_mean)[mls:mln]))
-#     eqeddy_ml.append(np.sum(np.array(eqjet_tracer_eddy)[mls:mln]))
-#     eqmean_ml.append(np.sum(np.array(eqjet_tracer_mean)[mls:mln]))
-# # For DJF fields
-# eddy_ml_djf, mean_ml_djf = [], []
-# pweddy_ml_djf, pwmean_ml_djf = [], []
-# eqeddy_ml_djf, eqmean_ml_djf = [], []
-# for tracer in [TRAC_0_10_djf, TRAC_10_20_djf, TRAC_20_30_djf, TRAC_30_40_djf, 
-#     TRAC_40_50_djf, TRAC_50_60_djf, TRAC_60_70_djf, TRAC_70_80_djf, 
-#     TRAC_80_90_djf]:
-#     # Calculate components of zonal- and time-mean transport for tracer for 
-#     # all days    
-#     tracer_total, tracer_mean, tracer_eddy = \
-#         globalo3_calculate.verticallyintegrated_meridional_flux(
-#         tracer, Vcolumn_gc_djf, np.arange(0, len(tracer), 1), 
-#         lat_gc, lng_gc, lev_gc, 955., 800., (28/28.97))
-#     eddy_ml_djf.append(np.sum(np.array(tracer_eddy)[mls:mln]))
-#     mean_ml_djf.append(np.sum(np.array(tracer_mean)[mls:mln]))
-#     # Find (PW - EW) jet composites
-#     eqjet_lat, eqjet_lat_var, pwjet_lat, pwjet_lat_var, pwjet_tracer, \
-#         eqjet_tracer = globalo3_calculate.segregate_field_bylat(
-#         np.nanmean(tracer, axis=1), lng_gc, edj_djf, 
-#         np.arange(0, len(tracer), 1))
-#     # Separate into PW and EW days
-#     Vcolumn_gc_eqjet, Vcolumn_gc_pwjet, tracer_eqjet, tracer_pwjet = \
-#         globalo3_calculate.sortfield_byjetlat_column(Vcolumn_gc_djf, tracer, 
-#         edj, lng_gc, lat_gc, lev_gc, psize=30) 
-#     # Zonal- and time-mean transport for PW jet 
-#     pwjet_tracer_total, pwjet_tracer_mean, pwjet_tracer_eddy = \
-#         globalo3_calculate.verticallyintegrated_meridional_flux(
-#         tracer_pwjet, Vcolumn_gc_pwjet, np.arange(0, len(tracer_pwjet), 1), 
-#         lat_gc, lng_gc, lev_gc, 955., 800., (28/28.97))        
-#     # Zonal- and time-mean transport for EW jet 
-#     eqjet_tracer_total, eqjet_tracer_mean, eqjet_tracer_eddy = \
-#         globalo3_calculate.verticallyintegrated_meridional_flux(
-#         tracer_eqjet, Vcolumn_gc_eqjet, np.arange(0, len(tracer_eqjet), 1), 
-#         lat_gc, lng_gc, lev_gc, 955., 800., (28/28.97))    
-#     pweddy_ml_djf.append(np.sum(np.array(pwjet_tracer_eddy)[mls:mln]))
-#     pwmean_ml_djf.append(np.sum(np.array(pwjet_tracer_mean)[mls:mln]))
-#     eqeddy_ml_djf.append(np.sum(np.array(eqjet_tracer_eddy)[mls:mln]))
-#     eqmean_ml_djf.append(np.sum(np.array(eqjet_tracer_mean)[mls:mln]))
-# labels = ['$\chi_{0-10^{\circ}}$', '$\chi_{10-20^{\circ}}$', 
-#     '$\chi_{20-30^{\circ}}$', '$\chi_{30-40^{\circ}}$', 
-#     '$\chi_{40-50^{\circ}}$', '$\chi_{50-60^{\circ}}$',
-#     '$\chi_{60-70^{\circ}}$', '$\chi_{70-80^{\circ}}$',
-#     '$\chi_{80-90^{\circ}}$']
-# x = np.arange(len(labels))  # label locations
-# width = 0.35  # width of the bars
-# # Plotting 
-# fig = plt.figure(figsize=(15,5))
-# ax1 = plt.subplot2grid((2,3),(0,0))
-# ax2 = plt.subplot2grid((2,3),(0,1))
-# ax3 = plt.subplot2grid((2,3),(0,2))
-# ax4 = plt.subplot2grid((2,3),(1,0))
-# ax5 = plt.subplot2grid((2,3),(1,1))
-# ax6 = plt.subplot2grid((2,3),(1,2))
-# # JJA (left) all, (middle) PW, and (right) EW eddy 
-# rects1 = ax1.bar(x-width/2, np.array(mean_ml), width, label='Mean')
-# rects2 = ax1.bar(x+width/2, np.array(eddy_ml), width, label='Eddy')
-# ax2.bar(x-width/2, np.array(pwmean_ml), width)
-# ax2.bar(x+width/2, np.array(pweddy_ml), width)
-# ax3.bar(x-width/2, np.array(eqmean_ml), width)
-# ax3.bar(x+width/2, np.array(eqeddy_ml), width)
-# # Aesthetics
-# ax1.set_title('All')
-# ax2.set_title('PW')
-# ax3.set_title('EW')
-# ax2.set_yticklabels([''])
-# ax3.set_yticklabels([''])
-# ax1.set_ylabel('JJA 0$-$90$^{\circ}$N flux [kg s$^{-1}$]')
-# for ax in [ax1, ax2, ax3]:
-#     ax.set_ylim([-900000,900000])
-#     ax.set_xticks(np.arange(0, 9, 1))
-#     ax.set_xticklabels([''])
-# # DJF (left) all, (middle) PW, and (right) EW eddy 
-# ax4.bar(x-width/2, np.array(mean_ml_djf), width, label='Mean')
-# ax4.bar(x+width/2, np.array(eddy_ml_djf), width, label='Eddy')
-# ax5.bar(x-width/2, np.array(pwmean_ml_djf), width)
-# ax5.bar(x+width/2, np.array(pweddy_ml_djf), width)
-# ax6.bar(x-width/2, np.array(eqmean_ml_djf), width)
-# ax6.bar(x+width/2, np.array(eqeddy_ml_djf), width)
-# ax5.set_yticklabels([''])
-# ax6.set_yticklabels([''])
-# ax4.set_ylabel('DJF 0$-$9$^{\circ}$N flux [kg s$^{-1}$]')
-# for ax in [ax4, ax5, ax6]:
-#     ax.set_ylim([-700000,700000])    
-#     ax.set_xticks(np.arange(0, 9, 1))
-#     ax.set_xticklabels(labels, rotation=35)
-# ax1.legend()
-# plt.subplots_adjust(wspace=0.05)
-# plt.savefig('/Users/ghkerr/Desktop/bar_meaneddyall_nh.png', dpi=300)
-
 """ZONALLY-AVERAGED JET-TRACER CORRELATIONS AT DIFFERENT PRESSURE LEVELS"""
 # import numpy as np
 # import sys
@@ -1437,158 +1310,6 @@ JET-TRACER RELATIONSHIP"""
 #     linestyles='--', linewidths=0.75)
 # plt.savefig('/Users/ghkerr/phd/tracer/figs/zonalavg_r_%sjet_presscoords.png'
 #     %filename, dpi=300)
-
-"""r(TRACER, JET) OVER LAND VS OCEAN FOR DIFFERENT SOURCE REGIONS """
-# import numpy as np
-# import sys
-# sys.path.append('/Users/ghkerr/phd/globalo3/')
-# import globalo3_open, globalo3_calculate, observations_open
-# datapath = '/Users/ghkerr/phd/globalo3/data/parsed/'      
-# import pandas as pd
-# import netCDF4 as nc
-# o3_gmi = nc.Dataset(datapath+'gmi_O3control_JJA2008-2010.nc')['O3_control'][:].data
-# lat_gmi = nc.Dataset(datapath+'gmi_O3control_JJA2008-2010.nc')['lat'][:].data
-# lng_gmi = nc.Dataset(datapath+'gmi_O3control_JJA2008-2010.nc')['lng'][:].data
-# # Interpolate to the resolution of GEOSChem 
-# o3_gmi = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, 
-#     lng_gc, lat_gmi, lng_gmi, o3_gmi, checkplot='yes')
-# # FIGURE OUT WHAT OCEAN DOESN"T WORK FOR GEOSCHEMM!!
-# land = globalo3_calculate.find_grid_overland(lat_gmi[:-5], lng_gmi)
-# wherenan = np.where(land != 1)
-# ocean = np.empty(shape=land.shape)
-# ocean[:] = np.nan
-# ocean[wherenan] = 1.
-# land_gc = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, 
-#     lng_gc, lat_gmi[:-5], lng_gmi, land, checkplot='no')
-# ocean_gc = globalo3_open.interpolate_merra_to_ctmresolution(lat_gc, 
-#     lng_gc, lat_gmi[:-5], lng_gmi, ocean, checkplot='no')
-# import numpy as np
-# import matplotlib as mpl
-# mpl.rcParams['hatch.linewidth'] = 0.3     
-# import matplotlib.pyplot as plt
-# from mpl_toolkits.axes_grid1 import make_axes_locatable
-# import cartopy.crs as ccrs
-# import cartopy.feature as cfeature
-# from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter    
-# o3_zm_land = np.nanmean((o3_gmi*land_gc), axis=tuple((0,-1)))
-# o3_zm_ocean = np.nanmean((o3_gmi*ocean_gc), axis=tuple((0,-1)))
-# grad_o3_zm_land = np.gradient(o3_zm_land)
-# grad_o3_zm_ocean = np.gradient(o3_zm_ocean)
-# r_o3jet = globalo3_calculate.calculate_r(o3_gmi, edj_dist, lat_gc, 
-#     lng_gc)
-# significance_r_o3jet = \
-#     globalo3_calculate.calculate_r_significance(o3_gmi, edj_dist, 
-#     r_o3jet, lat_gc, lng_gc)
-# TRAC_40_50, lat_gc, lng_gc, lev_gc = \
-#     tracer_open.open_geoschem_merra2_2x25_RnPbBe(years, months, 
-#     'SpeciesConc_TRAC50_40_50', latmin, latmax, lngmin, lngmax, 800., 956.)
-# TRAC_40_50 = np.nanmean(TRAC_40_50, axis=1)*1e6
-# TRAC_40_50zm_ocean = np.nanmean((TRAC_40_50*ocean_gc), axis=tuple((0,-1)))
-# grad_TRAC_40_50zm_ocean = np.gradient(TRAC_40_50zm_ocean)
-# r_TRAC_40_50jet = globalo3_calculate.calculate_r(TRAC_40_50, edj_dist, lat_gc, 
-#     lng_gc)
-# significance_r_TRAC_40_50jet = \
-#     globalo3_calculate.calculate_r_significance(TRAC_40_50, edj_dist, 
-#     r_TRAC_40_50jet, lat_gc, lng_gc)
-# TRAC_30_40, lat_gc, lng_gc, lev_gc = \
-#     tracer_open.open_geoschem_merra2_2x25_RnPbBe(years, months, 
-#     'SpeciesConc_TRAC50_30_40', latmin, latmax, lngmin, lngmax, 800., 956.)
-# TRAC_30_40 = np.nanmean(TRAC_30_40, axis=1)*1e6
-# TRAC_30_40zm_land = np.nanmean((TRAC_30_40*land_gc), axis=tuple((0,-1)))
-# grad_TRAC_30_40zm_land = np.gradient(TRAC_30_40zm_land)
-# r_TRAC_30_40jet = globalo3_calculate.calculate_r(TRAC_30_40, edj_dist, lat_gc, 
-#     lng_gc)
-# significance_r_TRAC_30_40jet = \
-#     globalo3_calculate.calculate_r_significance(TRAC_30_40, edj_dist, 
-#     r_TRAC_30_40jet, lat_gc, lng_gc)
-# # Plotting
-# fig = plt.figure(figsize=(10,2.5))
-# ax1 = plt.subplot2grid((2,3),(0,0)) 
-# ax2 = plt.subplot2grid((2,3),(0,1), 
-#     projection=ccrs.PlateCarree(central_longitude=0.))
-# ax3 = plt.subplot2grid((2,3),(0,2), 
-#     projection=ccrs.PlateCarree(central_longitude=0.))
-# ax4 = plt.subplot2grid((2,3),(1,0)) 
-# ax5 = plt.subplot2grid((2,3),(1,1), 
-#     projection=ccrs.PlateCarree(central_longitude=0.))
-# ax6 = plt.subplot2grid((2,3),(1,2), 
-#     projection=ccrs.PlateCarree(central_longitude=0.))
-# cmap = plt.get_cmap('coolwarm')
-# lng_gc[-1] = 360. # for wrapping around the Prime Meridian 
-# # r(TRAC_40_50, jet) over oceans
-# ax2.set_title('$\chi_{40\mathregular{-}50^{\circ}}$', fontsize=16, x=0.02, 
-#     ha='left')
-# mb = ax2.contourf(lng_gc, lat_gc, r_TRAC_40_50jet,
-#     np.linspace(-1, 1., 11), cmap=cmap, extend='neither',
-#     transform=ccrs.PlateCarree(), zorder=1)
-# ax2.coastlines(lw=0.25, color='k', zorder=3)
-# ax2.add_feature(cfeature.LAND, zorder=2, lw=0.0, color='w')
-# ax2.contourf(lng_gc, lat_gc, significance_r_TRAC_40_50jet, hatches=['//////'], 
-#     colors='none', transform=ccrs.PlateCarree())
-# # r(O3, jet) over land
-# ax3.set_title('O$_{\mathregular{3}}$', fontsize=10, x=0.02, 
-#     ha='left')
-# mb = ax3.contourf(lng_gc, lat_gc, r_o3jet,
-#     np.linspace(-1, 1, 11), cmap=cmap, extend='neither',
-#     transform=ccrs.PlateCarree(), zorder=1)
-# ax3.contourf(lng_gc, lat_gc, significance_r_o3jet, hatches=['//////'], 
-#     colors='none', transform=ccrs.PlateCarree())
-# ax3.coastlines(lw=0.25, color='k', zorder=3)
-# ax3.add_feature(cfeature.LAND, zorder=2, lw=0.0, color='w')
-# # Latitudinal gradient of O3 and TRAC_40_50 over oceans
-# ax1.plot(grad_o3_zm_ocean, lat_gc, '-k')
-# [t.set_fontsize(9) for t in ax1.xaxis.get_ticklabels()]
-# # ax1.set_xlabel('dO$_{3}$/d$\phi$', fontsize=10)
-# ax1b = ax1.twiny()
-# ax1b.plot(grad_TRAC_40_50zm_ocean, lat_gc, '-r')
-# [t.set_color('red') for t in ax1b.xaxis.get_ticklabels()]
-# [t.set_fontsize(9) for t in ax1b.xaxis.get_ticklabels()]
-# pos1 = ax2.get_position() # get the original position 
-# pos1 = [pos1.x0-0.15, pos1.y0,  pos1.width/2, pos1.height] 
-# ax1.set_position(pos1) # set a new position
-# ax1.set_ylim([0, 90])
-# ax1.set_yticks([0, 30, 60, 90])
-# ax1.set_ylabel('Latitude [$^\circ$N]')
-# # r(TRAC_30-40, jet) over land
-# ax5.set_title('$\chi_{30\mathregular{-}40^{\circ}}$', fontsize=16, x=0.02, 
-#     ha='left')
-# mb = ax5.contourf(lng_gc, lat_gc, r_TRAC_30_40jet,
-#     np.linspace(-1, 1, 11), cmap=cmap, extend='neither',
-#     transform=ccrs.PlateCarree(), zorder=1)
-# ax5.contourf(lng_gc, lat_gc, significance_r_TRAC_30_40jet, hatches=['//////'], 
-#     colors='none', transform=ccrs.PlateCarree())
-# ax5.coastlines(lw=0.25, color='k', zorder=3)
-# ax5.add_feature(cfeature.OCEAN, zorder=2, lw=0.0, color='w')
-# # r(O3, jet) over land
-# ax6.set_title('O$_{\mathregular{3}}$', fontsize=10, x=0.02, 
-#     ha='left')
-# mb = ax6.contourf(lng_gc, lat_gc, r_o3jet,
-#     np.linspace(-1, 1, 11), cmap=cmap, extend='neither',
-#     transform=ccrs.PlateCarree(), zorder=1)
-# ax6.contourf(lng_gc, lat_gc, significance_r_o3jet, hatches=['//////'], 
-#     colors='none', transform=ccrs.PlateCarree())
-# ax6.coastlines(lw=0.25, color='k', zorder=3)
-# ax6.add_feature(cfeature.OCEAN, zorder=2, lw=0.0, color='w')
-# colorbar_axes = plt.gcf().add_axes([0.92, ax6.get_position().y0, 
-#     0.02, (ax3.get_position().y1-ax6.get_position().y0)]) 
-# colorbar = plt.colorbar(mb, colorbar_axes, orientation='vertical')
-# colorbar.ax.tick_params(labelsize=12)
-# colorbar.set_label('[$\cdot$]', fontsize=10)
-# ax4.plot(grad_o3_zm_land, lat_gc, '-k')
-# [t.set_fontsize(9) for t in ax4.xaxis.get_ticklabels()]
-# # ax4.set_xlabel('dO$_{3}$/d$\phi$', fontsize=10)
-# ax4b = ax4.twiny()
-# ax4b.plot(grad_TRAC_30_40zm_land, lat_gc, '-r')
-# [t.set_color('red') for t in ax4b.xaxis.get_ticklabels()]
-# [t.set_fontsize(9) for t in ax4b.xaxis.get_ticklabels()]
-# ax4b.xaxis.set_label_coords(1.4, 1.35)
-# pos1 = ax5.get_position() # get the original position 
-# pos1 = [pos1.x0-0.15, pos1.y0,  pos1.width/2, pos1.height] 
-# ax4.set_position(pos1) # set a new position
-# ax4.set_ylim([0, 90])
-# ax4.set_yticks([0, 30, 60, 90])
-# ax4.set_ylabel('Latitude [$^\circ$N]')
-# plt.savefig('/Users/ghkerr/Desktop/hihigaige.png', dpi=300)
 
 """ CO50, NH50, AND TRAC_30_40 OVER LAND VERSUS OCEANS"""
 # # Tracer with 30-40 deg source most similar to CO_50 (at least regarding)
@@ -1709,29 +1430,269 @@ JET-TRACER RELATIONSHIP"""
 #     'zonalavg_stationaryeddyflux_tracers_geoschem_985-800.png', dpi=300)
 # plt.show()
 
+"""CALCULATE EXPECTED JET-TRACER RELATIONSHIP WITH ZONAL MEAN JET-V 
+RELATIONSHIP AND ZONAL MEAN BACKGROUND GRADIENT"""
+# clevs = np.linspace(-12, 12, 13)
+# # Plot filled contours
+# cmap = plt.get_cmap('coolwarm')
+# # For wrapping around the Prime Meridian
+# if lng[-1] != 360:
+#     lng[-1] = 360.
+# # METHOD 1: local background gradient, local r(V, jet)    
+# fig = plt.figure(figsize=(7,7.4))
+# ax1 = plt.subplot2grid((4,2), (0,0), colspan=2,
+#     projection=ccrs.PlateCarree(central_longitude=0.))
+# ax2 = plt.subplot2grid((4,2), (1,0), colspan=2,
+#     projection=ccrs.PlateCarree(central_longitude=0.))
+# ax3 = plt.subplot2grid((4,2), (2,0), colspan=2,
+#     projection=ccrs.PlateCarree(central_longitude=0.))
+# ax4 = plt.subplot2grid((4,2), (3,0), colspan=2,
+#     projection=ccrs.PlateCarree(central_longitude=0.))
+# ax1.set_title('(a) E[r($\chi_{10-20^{\circ}}$, $\phi_{jet}$)]', fontsize=12, 
+#     x=0.02, ha='left')
+# ax2.set_title('(b) E[r($\chi_{40-50^{\circ}}$, $\phi_{jet}$)]', fontsize=12, 
+#     x=0.02, ha='left')
+# ax3.set_title('(c) E[r($\chi_{70-80^{\circ}}$, $\phi_{jet}$)]', fontsize=12, 
+#     x=0.02, ha='left')
+# ax4.set_title('(d) E[r(O$_3$, $\phi_{jet}$)]*10', fontsize=12, x=0.02, ha='left')
+# axes = [ax1, ax2, ax3, ax4]
+# # Determine near-surface meridional wind-jet correlation
+# r_Vjet = globalo3_calculate.calculate_r(np.nanmean(V_jja, axis=1), 
+#     edj_dist_jja, lat, lng)
+# # Loop through all tracers
+# for i,tracer in enumerate([np.nanmean(TRAC_10_20_jja, axis=1), 
+#     np.nanmean(TRAC_40_50_jja, axis=1), np.nanmean(TRAC_70_80_jja, axis=1), 
+#     o3_jja/1e8]):
+#     # Determine tracer-jet correlation
+#     r_tracerjet = globalo3_calculate.calculate_r(tracer, edj_dist_jja, lat, 
+#         lng)
+#     # Time-averaged tracer
+#     tracer = np.nanmean(tracer, axis=0)
+#     # Loop through each longitude and calculate the latitudinal gradient
+#     grad_tracer = np.empty(shape=tracer.shape)
+#     grad_tracer[:] = np.nan
+#     for spine_i in np.arange(0, len(lng), 1):
+#         # Tracer concentrations for given "spine" of latitudes at a given 
+#         # longitude
+#         spine = tracer[:,spine_i]
+#         grad_spine = np.gradient(spine)
+#         grad_tracer[:,spine_i] = grad_spine
+#     grad_tracer = np.array(grad_tracer)
+#     expected = -1.*r_Vjet*grad_tracer
+#     mb = axes[i].contourf(lng, lat, expected*1e9, clevs, cmap=cmap, 
+#         extend='both', transform=ccrs.PlateCarree(), zorder=1)
+#     skiplng = 5
+#     axes[i].errorbar(lng[::skiplng], np.nanmean(edj, axis=0)[::skiplng], 
+#         yerr=np.nanstd(edj, axis=0)[::skiplng], zorder=10, color='k', 
+#         markersize=3, elinewidth=1.25, ecolor='k', fmt='o', 
+#         transform=ccrs.PlateCarree())
+#     axes[i].coastlines(lw=0.25, resolution='50m', color='k', zorder=3)
+#     axes[i].set_extent([lng.min()-180., lng.max()-180., lat.min(), 
+#         lat.max()])
+#     axes[i].set_xticks([-180, -120, -60, 0, 60, 120, 180], 
+#         crs=ccrs.PlateCarree())
+#     lng_formatter = LongitudeFormatter()
+#     axes[i].xaxis.set_major_formatter(lng_formatter)         
+#     axes[i].get_xaxis().set_ticklabels([])
+#     axes[i].set_yticks([0, 30, 60, 90], crs=ccrs.PlateCarree())
+#     lat_formatter = LatitudeFormatter()    
+#     axes[i].yaxis.set_major_formatter(lat_formatter)    
+#     axes[i].tick_params(which='major', labelsize=9)
+#     axes[i].outline_patch.set_zorder(20)    
+# ax4.set_xticks([-180, -120, -60, 0, 60, 120, 180], crs=ccrs.PlateCarree())    
+# lng_formatter = LongitudeFormatter()
+# ax4.xaxis.set_major_formatter(lng_formatter)       
+# ax4.tick_params(which='major', labelsize=9)
+# plt.subplots_adjust(left=0.05, right=0.85, hspace=0.4)
+# colorbar_axes = plt.gcf().add_axes([0.85, ax4.get_position().y0, 
+#     0.02, (ax1.get_position().y1-ax4.get_position().y0)]) 
+# colorbar = plt.colorbar(mb, colorbar_axes, orientation='vertical', 
+#     ticks=clevs, extend='both')
+# colorbar.ax.tick_params(labelsize=12)
+# colorbar.set_label('[ppbv/$\circ$]', fontsize=16)
+# plt.savefig('/Users/ghkerr/phd/tracer/figs/'+
+#     'expectedvalue_contourf.png', dpi=500)
+# plt.show()
 
-lng = lng_gc
-lat = lat_gc
-V = Vcolumn_gc
+# # METHOD 2: local background gradient, zonal mean r(V, jet)
+# fig = plt.figure(figsize=(7,7.4))
+# ax1 = plt.subplot2grid((4,2), (0,0), colspan=2,
+#     projection=ccrs.PlateCarree(central_longitude=0.))
+# ax2 = plt.subplot2grid((4,2), (1,0), colspan=2,
+#     projection=ccrs.PlateCarree(central_longitude=0.))
+# ax3 = plt.subplot2grid((4,2), (2,0), colspan=2,
+#     projection=ccrs.PlateCarree(central_longitude=0.))
+# ax4 = plt.subplot2grid((4,2), (3,0), colspan=2,
+#     projection=ccrs.PlateCarree(central_longitude=0.))
+# ax1.set_title('(a) E[r($\chi_{10-20^{\circ}}$, $\phi_{jet}$)]', fontsize=12, 
+#     x=0.02, ha='left')
+# ax2.set_title('(b) E[r($\chi_{40-50^{\circ}}$, $\phi_{jet}$)]', fontsize=12, 
+#     x=0.02, ha='left')
+# ax3.set_title('(c) E[r($\chi_{70-80^{\circ}}$, $\phi_{jet}$)]', fontsize=12, 
+#     x=0.02, ha='left')
+# ax4.set_title('(d) E[r(O$_3$, $\phi_{jet}$)]*10', fontsize=12, x=0.02, ha='left')
+# axes = [ax1, ax2, ax3, ax4]
+# # Determine near-surface meridional wind-jet correlation
+# r_Vjet = globalo3_calculate.calculate_r(np.nanmean(V_jja, axis=1), 
+#     edj_dist_jja, lat, lng)
+# # Loop through all tracers
+# for i,tracer in enumerate([np.nanmean(TRAC_10_20_jja, axis=1), 
+#     np.nanmean(TRAC_40_50_jja, axis=1), np.nanmean(TRAC_70_80_jja, axis=1), 
+#     o3_jja/1e8]):
+#     # Determine tracer-jet correlation
+#     r_tracerjet = globalo3_calculate.calculate_r(tracer, edj_dist_jja, lat, 
+#         lng)
+#     # Time-averaged tracer
+#     tracer = np.nanmean(tracer, axis=0)
+#     # Loop through each longitude and calculate the latitudinal gradient
+#     grad_tracer = np.empty(shape=tracer.shape)
+#     grad_tracer[:] = np.nan
+#     r_Vjet = np.empty(shape=tracer.shape)
+#     r_Vjet[:] = np.nan
+#     for spine_i in np.arange(0, len(lng), 1):
+#         spine = tracer[:,spine_i]
+#         grad_spine = np.gradient(spine)
+#         grad_tracer[:,spine_i] = grad_spine
+#         r_Vjet[:,spine_i] = r_Vjet_zm
+#     grad_tracer = np.array(grad_tracer)
+#     expected = -1.*r_Vjet*grad_tracer
+#     mb = axes[i].contourf(lng, lat, expected*1e9, clevs, cmap=cmap, 
+#         extend='both', transform=ccrs.PlateCarree(), zorder=1)
+#     skiplng = 5
+#     axes[i].errorbar(lng[::skiplng], np.nanmean(edj, axis=0)[::skiplng], 
+#         yerr=np.nanstd(edj, axis=0)[::skiplng], zorder=10, color='k', 
+#         markersize=3, elinewidth=1.25, ecolor='k', fmt='o', 
+#         transform=ccrs.PlateCarree())
+#     axes[i].coastlines(lw=0.25, resolution='50m', color='k', zorder=3)
+#     axes[i].set_extent([lng.min()-180., lng.max()-180., lat.min(), 
+#         lat.max()])
+#     axes[i].set_xticks([-180, -120, -60, 0, 60, 120, 180], 
+#         crs=ccrs.PlateCarree())
+#     lng_formatter = LongitudeFormatter()
+#     axes[i].xaxis.set_major_formatter(lng_formatter)         
+#     axes[i].get_xaxis().set_ticklabels([])
+#     axes[i].set_yticks([0, 30, 60, 90], crs=ccrs.PlateCarree())
+#     lat_formatter = LatitudeFormatter()    
+#     axes[i].yaxis.set_major_formatter(lat_formatter)    
+#     axes[i].tick_params(which='major', labelsize=9)
+#     axes[i].outline_patch.set_zorder(20)    
+# ax4.set_xticks([-180, -120, -60, 0, 60, 120, 180], crs=ccrs.PlateCarree())    
+# lng_formatter = LongitudeFormatter()
+# ax4.xaxis.set_major_formatter(lng_formatter)       
+# ax4.tick_params(which='major', labelsize=9)
+# plt.subplots_adjust(left=0.05, right=0.85, hspace=0.4)
+# colorbar_axes = plt.gcf().add_axes([0.85, ax4.get_position().y0, 
+#     0.02, (ax1.get_position().y1-ax4.get_position().y0)]) 
+# colorbar = plt.colorbar(mb, colorbar_axes, orientation='vertical', 
+#     ticks=clevs, extend='both')
+# colorbar.ax.tick_params(labelsize=12)
+# colorbar.set_label('[ppbv/$\circ$]', fontsize=16)
+# plt.savefig('/Users/ghkerr/phd/tracer/figs/'+
+#     'expectedvalue_zonalmeanr_Vjet_contourf.png', dpi=500)
+# plt.show()
+
+# # METHOD 3: local r(V, jet), zonal mean background gradient
+# fig = plt.figure(figsize=(7,7.4))
+# ax1 = plt.subplot2grid((4,2), (0,0), colspan=2,
+#     projection=ccrs.PlateCarree(central_longitude=0.))
+# ax2 = plt.subplot2grid((4,2), (1,0), colspan=2,
+#     projection=ccrs.PlateCarree(central_longitude=0.))
+# ax3 = plt.subplot2grid((4,2), (2,0), colspan=2,
+#     projection=ccrs.PlateCarree(central_longitude=0.))
+# ax4 = plt.subplot2grid((4,2), (3,0), colspan=2,
+#     projection=ccrs.PlateCarree(central_longitude=0.))
+# ax1.set_title('(a) E[r($\chi_{10-20^{\circ}}$, $\phi_{jet}$)]', fontsize=12, 
+#     x=0.02, ha='left')
+# ax2.set_title('(b) E[r($\chi_{40-50^{\circ}}$, $\phi_{jet}$)]', fontsize=12, 
+#     x=0.02, ha='left')
+# ax3.set_title('(c) E[r($\chi_{70-80^{\circ}}$, $\phi_{jet}$)]', fontsize=12, 
+#     x=0.02, ha='left')
+# ax4.set_title('(d) E[r(O$_3$, $\phi_{jet}$)]*10', fontsize=12, x=0.02, ha='left')
+# axes = [ax1, ax2, ax3, ax4]
+# # Determine near-surface meridional wind-jet correlation
+# r_Vjet = globalo3_calculate.calculate_r(np.nanmean(V_jja, axis=1), 
+#     edj_dist_jja, lat, lng)
+# # Loop through all tracers
+# for i,tracer in enumerate([np.nanmean(TRAC_10_20_jja, axis=1), 
+#     np.nanmean(TRAC_40_50_jja, axis=1), np.nanmean(TRAC_70_80_jja, axis=1), 
+#     o3_jja/1e8]):
+#     # Determine tracer-jet correlation
+#     r_tracerjet = globalo3_calculate.calculate_r(tracer, edj_dist_jja, lat, 
+#         lng)
+#     # Time-averaged tracer
+#     tracer = np.nanmean(tracer, axis=0)
+#     # Loop through each longitude and calculate the latitudinal gradient
+#     grad_tracer = np.empty(shape=tracer.shape)
+#     grad_tracer[:] = np.nan
+#     grad_spine = np.gradient(np.nanmean(tracer, axis=-1))
+#     for spine_i in np.arange(0, len(lng), 1):
+#         spine = tracer[:,spine_i]
+#         grad_tracer[:,spine_i] = grad_spine
+#     grad_tracer = np.array(grad_tracer)
+#     expected = -1.*r_Vjet*grad_tracer
+#     mb = axes[i].contourf(lng, lat, expected*1e9, clevs, cmap=cmap, 
+#         extend='both', transform=ccrs.PlateCarree(), zorder=1)
+#     skiplng = 5
+#     axes[i].errorbar(lng[::skiplng], np.nanmean(edj, axis=0)[::skiplng], 
+#         yerr=np.nanstd(edj, axis=0)[::skiplng], zorder=10, color='k', 
+#         markersize=3, elinewidth=1.25, ecolor='k', fmt='o', 
+#         transform=ccrs.PlateCarree())
+#     axes[i].coastlines(lw=0.25, resolution='50m', color='k', zorder=3)
+#     axes[i].set_extent([lng.min()-180., lng.max()-180., lat.min(), 
+#         lat.max()])
+#     axes[i].set_xticks([-180, -120, -60, 0, 60, 120, 180], 
+#         crs=ccrs.PlateCarree())
+#     lng_formatter = LongitudeFormatter()
+#     axes[i].xaxis.set_major_formatter(lng_formatter)         
+#     axes[i].get_xaxis().set_ticklabels([])
+#     axes[i].set_yticks([0, 30, 60, 90], crs=ccrs.PlateCarree())
+#     lat_formatter = LatitudeFormatter()    
+#     axes[i].yaxis.set_major_formatter(lat_formatter)    
+#     axes[i].tick_params(which='major', labelsize=9)
+#     axes[i].outline_patch.set_zorder(20)    
+# ax4.set_xticks([-180, -120, -60, 0, 60, 120, 180], crs=ccrs.PlateCarree())    
+# lng_formatter = LongitudeFormatter()
+# ax4.xaxis.set_major_formatter(lng_formatter)       
+# ax4.tick_params(which='major', labelsize=9)
+# plt.subplots_adjust(left=0.05, right=0.85, hspace=0.4)
+# colorbar_axes = plt.gcf().add_axes([0.85, ax4.get_position().y0, 
+#     0.02, (ax1.get_position().y1-ax4.get_position().y0)]) 
+# colorbar = plt.colorbar(mb, colorbar_axes, orientation='vertical', 
+#     ticks=clevs, extend='both')
+# colorbar.ax.tick_params(labelsize=12)
+# colorbar.set_label('[ppbv/$\circ$]', fontsize=16)
+# plt.savefig('/Users/ghkerr/phd/tracer/figs/'+
+#     'expectedvalue_zonalmeanlatgradient_contourf.png', dpi=500)
+# plt.show()
 
 
-# To generate colormap, I found these three "midpoint" colors from 
-# https://learnui.design/tools/data-color-picker.html#palette: 
-#003f5c, #bc5090, #ffa600
-# Then I created a nine color palette using 
-# https://vis4.net/palettes/#/9|s|00429d,96ffea,ffffe0|ffffe0,ff005e,93003a|1|1
-COLORS = ['#003f5c', '#434766', '#6a4f6d', '#8b586f', '#a9636c', 
-    '#c47064', '#db7f56', '#ef913e', '#ffa600']
-LABELS = ['$\chi_{0-10^{\circ}}$', '$\chi_{10-20^{\circ}}$', 
-    '$\chi_{20-30^{\circ}}$', '$\chi_{30-40^{\circ}}$', 
-    '$\chi_{40-50^{\circ}}$', '$\chi_{50-60^{\circ}}$',
-    '$\chi_{60-70^{\circ}}$', '$\chi_{70-80^{\circ}}$',
-    '$\chi_{80-90^{\circ}}$']
+
+
+
+
+
+
+
 
 
 
 import numpy as np
 import matplotlib as mpl
+import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
+from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
+# To generate colormap, I found these three "midpoint" colors from 
+# https://learnui.design/tools/data-color-picker.html#palette: 
+#003f5c, #bc5090, #ffa600
+# Then I created a nine color palette using 
+# https://vis4.net/palettes/#/9|s|00429d,96ffea,ffffe0|ffffe0,ff005e,93003a|1|1
+COLORS = ['#003f5c', '#514969', '#80556f', '#a9636c', '#cc7560', 
+    '#e98b47', '#ffa600']
+LABELS = ['$\chi_{10-20^{\circ}}$', '$\chi_{20-30^{\circ}}$', 
+    '$\chi_{30-40^{\circ}}$', '$\chi_{40-50^{\circ}}$', 
+    '$\chi_{50-60^{\circ}}$','$\chi_{60-70^{\circ}}$', 
+    '$\chi_{70-80^{\circ}}$']
 mpl.rcParams['hatch.linewidth'] = 0.3  
 mpl.rcParams['xtick.major.width'] = 1 
 mpl.rcParams['ytick.major.width'] = 1   
@@ -1739,14 +1700,200 @@ mpl.rcParams['axes.spines.bottom'] = 1
 mpl.rcParams['axes.spines.left'] = 1
 mpl.rcParams['axes.spines.right'] = 1
 mpl.rcParams['axes.spines.top'] = 1
-import matplotlib.pyplot as plt
-import cartopy.crs as ccrs
-import cartopy.feature as cfeature
-from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter  
 
-
-def fig2():
+def fig1(lat, lng, o3_jja, o3_djf, edj_dist_jja, edj_dist_djf, edj_jja, 
+    edj_djf):
     """
+    Parameters
+    ----------
+    lat : numpy.ndarray
+        Latitude coordinates for the Northern Hemisphere, units of degrees 
+        north, [lat,]                
+    lng : numpy.ndarray
+        Longitude coordinates for the Northern Hemisphere, units of degrees 
+        east, [lng,]          
+    o3_jja : numpy.ndarray
+        Daily surface-level O3 for JJA 2008-2010, units of ppbv, [time, lat, 
+        lng]
+    o3_djf : numpy.ndarray
+        Daily surface-level O3 for DJF 2008-2010, units of ppbv, [time, lat, 
+        lng]        
+    edj_dist_jja : numpy.ndarray
+        Distance from the jet stream for JJA 2008-2010, units of degrees, 
+        [time, lat, lng]
+    edj_dist_djf : numpy.ndarray
+        Distance from the jet stream for DJF 2008-2010, units of degrees, 
+        [time, lat, lng]    
+    edj_jja : numpy.ndarray
+        Latitude of the jet stream for JJA 2008-2010, units of degrees north,
+        [time, lng]
+    edj_djf : numpy.ndarray
+        Latitude of the jet stream for DJF 2008-2010, units of degrees north,
+        [time, lng]
+
+    Returns
+    -------
+    None          
+    """
+    if lng[-1] != 360:
+        lng[-1] = 360.  
+    fig = plt.figure(figsize=(9.5,3.5))
+    ax1 = plt.subplot2grid((2,3), (0,0))
+    ax2 = plt.subplot2grid((2,3), (0,1), colspan=2,
+        projection=ccrs.PlateCarree(central_longitude=0.))
+    ax3 = plt.subplot2grid((2,3), (1,0))
+    ax4 = plt.subplot2grid((2,3), (1,1), colspan=2,
+        projection=ccrs.PlateCarree(central_longitude=0.))
+    ax1.set_title('(a) JJA O$_{3}$', fontsize=12, x=0.02, 
+        ha='left')
+    ax2.set_title('(b) JJA O$_{3}$ (PW$\:$-$\:$EW)', fontsize=12, x=0.02, 
+        ha='left')
+    ax3.set_title('(c) DJF O$_{3}$', fontsize=12, x=0.02, 
+        ha='left')
+    ax4.set_title('(d) DJF O$_{3}$ (PW$\:$-$\:$EW)', fontsize=12, x=0.02, 
+        ha='left')
+    # Plot time- and zonally-average JJA and DJF O3 
+    ax1.plot(np.nanmean(o3_jja, axis=tuple((0,2))), lat, ls='-', lw=2, 
+        color='k')
+    ax3.plot(np.nanmean(o3_djf, axis=tuple((0,2))), lat, ls='-', lw=2, 
+        color='k')
+    for ax in [ax1, ax3]:
+        ax.set_xlim([20, 45])
+        ax.set_ylim([10,80])
+        ax.set_xticklabels([''])
+        ax.set_yticks([15,45,75])
+        ax.set_yticklabels(['15$^{\circ}$N','45$^{\circ}$N','75$^{\circ}$N'])
+        ax.tick_params(which='major', labelsize=9)
+    ax3.set_xticklabels(['20', '25', '30', '35', '40', '45'])    
+    ax3.set_xlabel('[ppbv]', fontsize=12)    
+    # Calculate tracer-jet correlation, significance, and PW/EW composites
+    r_o3jet_jja = globalo3_calculate.calculate_r(o3_jja, edj_dist_jja, lat, 
+        lng)
+    r_o3jet_djf = globalo3_calculate.calculate_r(o3_djf, edj_dist_djf, lat, 
+        lng)
+    significance_r_o3jet_jja = globalo3_calculate.calculate_r_significance(
+        o3_jja, edj_dist_jja, r_o3jet_jja, lat, lng)
+    significance_r_o3jet_djf = globalo3_calculate.calculate_r_significance(
+        o3_djf, edj_dist_djf, r_o3jet_djf, lat, lng)
+    eqjet_lat, eqjet_lat_var, pwjet_lat, pwjet_lat_var, pwjet_o3_jja, \
+        eqjet_o3_jja = globalo3_calculate.segregate_field_bylat(
+        o3_jja, lng, edj, np.arange(0, len(o3_jja), 1))
+    eqjet_lat, eqjet_lat_var, pwjet_lat, pwjet_lat_var, pwjet_o3_djf, \
+        eqjet_o3_djf = globalo3_calculate.segregate_field_bylat(
+        o3_djf, lng, edj_djf, np.arange(0, len(o3_djf), 1))    
+    # (PW-EW) composites
+    clevs = np.linspace(-8, 8, 9)
+    mb = ax2.contourf(lng, lat, (pwjet_o3_jja-eqjet_o3_jja),
+        clevs, cmap=plt.get_cmap('coolwarm'), extend='both', 
+        transform=ccrs.PlateCarree(), zorder=2)
+    mb = ax4.contourf(lng, lat, (pwjet_o3_djf-eqjet_o3_djf),
+        clevs, cmap=plt.get_cmap('coolwarm'), extend='both', 
+        transform=ccrs.PlateCarree(), zorder=2)
+    # Hatching for significance
+    ax2.contourf(lng, lat, significance_r_o3jet_jja, 
+        hatches=['//////'], colors='none', transform=ccrs.PlateCarree(), 
+        zorder=4)
+    ax4.contourf(lng, lat, significance_r_o3jet_djf, 
+        hatches=['//////'], colors='none', transform=ccrs.PlateCarree(), 
+        zorder=4)
+    skiplng = 5
+    for ax in [ax2, ax4]:
+        # Eddy-driven jet    
+        ax.errorbar(lng[::skiplng], np.nanmean(edj_jja, axis=0)[::skiplng], 
+            yerr=np.nanstd(edj_jja, axis=0)[::skiplng], zorder=10, color='k', 
+            markersize=3, elinewidth=1.25, ecolor='k', fmt='o', 
+            transform=ccrs.PlateCarree())
+        # Aesthetics
+        ax.coastlines(lw=0.25, resolution='50m', color='k', zorder=3)
+        ax.set_extent([lng.min()-180., lng.max()-180., 10, 80])
+        ax.set_xticks([-180, -120, -60, 0, 60, 120, 180], 
+            crs=ccrs.PlateCarree())
+        lng_formatter = LongitudeFormatter()
+        ax.xaxis.set_major_formatter(lng_formatter)         
+        ax.get_xaxis().set_ticklabels([])
+        ax.set_yticks([15, 45, 75], crs=ccrs.PlateCarree())
+        lat_formatter = LatitudeFormatter()    
+        ax.yaxis.set_major_formatter(lat_formatter)    
+        ax.tick_params(which='major', labelsize=9)
+    ax4.set_xticks([-180, -120, -60, 0, 60, 120, 180], crs=ccrs.PlateCarree())    
+    lng_formatter = LongitudeFormatter()
+    ax4.xaxis.set_major_formatter(lng_formatter)       
+    ax4.tick_params(which='major', labelsize=9)
+    plt.subplots_adjust(left=0.1, right=0.88, top=0.95, bottom=0.08, 
+        wspace=0.2, hspace=-0.1)
+    # Add colorbar
+    cbaxes = fig.add_axes([ax2.get_position().x1+0.03, ax4.get_position().y0, 
+        0.02, ax2.get_position().y1-ax4.get_position().y0])
+    cb = plt.colorbar(mb, cax=cbaxes, orientation='vertical')
+    cb.set_label(label='[ppbv]', size=12)
+    # cb.set_ticks(np.linspace(-0.2, 0.2, 11))
+    cb.ax.tick_params(labelsize=9)
+    # Move ax1 and ax3 such that their top/bottom line up with ax2 and ax4
+    pos = ax1.get_position()
+    pos = [pos.x0-0.04, ax2.get_position().y0, pos.width, 
+        (ax2.get_position().y1-ax2.get_position().y0)] 
+    ax1.set_position(pos)
+    pos = ax3.get_position()
+    pos = [pos.x0-0.04, ax4.get_position().y0, pos.width, 
+        (ax4.get_position().y1-ax4.get_position().y0)] 
+    ax3.set_position(pos)
+    plt.savefig('/Users/ghkerr/phd/tracer/figs/'+'fig1.png', dpi=500)
+    plt.show()    
+    return 
+
+def fig2(lat, lng, TRAC_10_20_jja, TRAC_20_30_jja, TRAC_30_40_jja, 
+    TRAC_40_50_jja, TRAC_50_60_jja, TRAC_60_70_jja, TRAC_70_80_jja, edj_jja):
+    """
+    Parameters
+    ----------
+    lat : numpy.ndarray
+        Latitude coordinates for the Northern Hemisphere, units of degrees 
+        north, [lat,]                
+    lng : numpy.ndarray
+        Longitude coordinates for the Northern Hemisphere, units of degrees 
+        east, [lng,]    
+    TRAC_10_20_jja : numpy.ndarray
+        GEOS-Chem CO-like tracer for given pressure levels (n.b., column 
+        average is performed in function) with prescribed emissions from 10-20 
+        deg north for days during JJA 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]
+    TRAC_20_30_jja : numpy.ndarray
+        GEOS-Chem CO-like tracer for given pressure levels (n.b., column 
+        average is performed in function) with prescribed emissions from 20-30 
+        deg north for days during JJA 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]
+    TRAC_30_40_jja : numpy.ndarray
+        GEOS-Chem CO-like tracer for given pressure levels (n.b., column 
+        average is performed in function) with prescribed emissions from 30-40 
+        deg north for days during JJA 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]
+    TRAC_40_50_jja : numpy.ndarray
+        GEOS-Chem CO-like tracer for given pressure levels (n.b., column 
+        average is performed in function) with prescribed emissions from 40-50 
+        deg north for days during JJA 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]
+    TRAC_50_60_jja : numpy.ndarray
+        GEOS-Chem CO-like tracer for given pressure levels (n.b., column 
+        average is performed in function) with prescribed emissions from 50-60 
+        deg north for days during JJA 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]
+    TRAC_60_70_jja : numpy.ndarray
+        GEOS-Chem CO-like tracer for given pressure levels (n.b., column 
+        average is performed in function) with prescribed emissions from 60-70 
+        deg north for days during JJA 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]
+    TRAC_70_80_jja : numpy.ndarray
+        GEOS-Chem CO-like tracer for given pressure levels (n.b., column 
+        average is performed in function) with prescribed emissions from 70-80 
+        deg north for days during JJA 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]
+    edj_jja : numpy.ndarray
+        Latitude of the jet stream for JJA 2008-2010, units of degrees north,
+        [time, lng]
+        
+    Returns
+    -------
+    None
     """    
     if lng[-1] != 360:
         lng[-1] = 360.    
@@ -1760,56 +1907,62 @@ def fig2():
         projection=ccrs.PlateCarree(central_longitude=0.))
     # Zonally-averaged tracer concentrations
     ax1.set_title('(a)', fontsize=12, x=0.02, ha='left')
-    for i, tracer in enumerate([TRAC_0_10, TRAC_10_20, TRAC_20_30, TRAC_30_40, 
-        TRAC_40_50, TRAC_50_60, TRAC_60_70, TRAC_70_80, TRAC_80_90]):
+    lw = [2.5, 1, 1, 2.5, 1, 1, 2.5]
+    for i, tracer in enumerate([TRAC_10_20_jja, TRAC_20_30_jja, TRAC_30_40_jja, 
+        TRAC_40_50_jja, TRAC_50_60_jja, TRAC_60_70_jja, TRAC_70_80_jja]):
         # Zonal, time, and vertical average; convert to ppm
         tracer = np.nanmean(tracer, axis=tuple((0,1,3)))*1e6
-        ax1.plot(tracer, lat, color=COLORS[i], label=LABELS[i], lw=2)
+        ax1.plot(tracer, lat, color=COLORS[i], label=LABELS[i], 
+            lw=lw[i])
     ax1.set_xlim([0, 1.6])
     ax1.set_xticks([0, 0.4, 0.8, 1.2, 1.6])
     ax1.set_xticklabels(['0.0', '', '0.8', '', '1.6'])
-    ax1.set_ylim([0, lat.max()])
-    ax1.set_yticks([0, 15, 30, 45, 60, 75, lat.max()])
-    ax1.set_yticklabels(['0$^{\circ}$', '15$^{\circ}$N', '30$^{\circ}$N',
-        '45$^{\circ}$N', '60$^{\circ}$N', '75$^{\circ}$N', '90$^{\circ}$N'])
+    ax1.set_ylim([10, 80])
+    ax1.set_yticks([10, 20, 30, 40, 50, 60, 70, 80])
+    ax1.set_yticklabels(['10$^{\circ}$N', '20$^{\circ}$N', '30$^{\circ}$N',
+        '40$^{\circ}$N', '50$^{\circ}$N', '60$^{\circ}$N', '70$^{\circ}$N',
+        '80$^{\circ}$N'])
     ax1.set_xlabel('[ppm]', fontsize=12)
     ax1.tick_params(which='major', labelsize=9)
     # Add Legend 
-    ax1.legend(bbox_to_anchor=[3.6, -0.1, 0, 0], ncol=5, frameon=False, 
+    ax1.legend(bbox_to_anchor=[3.3, -0.1, 0, 0], ncol=4, frameon=False, 
         fontsize=12)
     # # Distribution of X10-20
     ax2.set_title('(b) $\chi_{10-20^{\circ}}$', fontsize=12, x=0.02, ha='left')
-    mb = ax2.contourf(lng, lat, np.nanmean(TRAC_10_20, axis=tuple((0,1)))*1e6, 
+    mb = ax2.contourf(lng, lat, 
+        np.nanmean(TRAC_10_20_jja, axis=tuple((0,1)))*1e6, 
         np.linspace(0., 1.6, 9), cmap=plt.get_cmap('pink_r'), extend='max',
         transform=ccrs.PlateCarree(), zorder=2)
     # Distribution of X40-50
     ax3.set_title('(c) $\chi_{40-50^{\circ}}$', fontsize=12, x=0.02, ha='left')
-    mb = ax3.contourf(lng, lat, np.nanmean(TRAC_40_50, axis=tuple((0,1)))*1e6, 
+    mb = ax3.contourf(lng, lat, 
+        np.nanmean(TRAC_40_50_jja, axis=tuple((0,1)))*1e6, 
         np.linspace(0., 1.6, 9), cmap=plt.get_cmap('pink_r'), extend='max',
         transform=ccrs.PlateCarree(), zorder=2)
     # Distribution of X70-80
     ax4.set_title('(d) $\chi_{70-80^{\circ}}$', fontsize=12, x=0.02, ha='left')
-    mb = ax4.contourf(lng, lat, np.nanmean(TRAC_70_80, axis=tuple((0,1)))*1e6, 
-        np.linspace(0., 1.6, 9), cmap=plt.get_cmap('pink_r'), extend='max',
+    mb = ax4.contourf(lng, lat, np.nanmean(TRAC_70_80_jja, 
+        axis=tuple((0,1)))*1e6, np.linspace(0., 1.6, 9), 
+        cmap=plt.get_cmap('pink_r'), extend='max', 
         transform=ccrs.PlateCarree(), zorder=2)
     # Aesthetics
     for ax in [ax2, ax3, ax4]:
         # Add eddy-driven jet
         skiplng = 5
-        ax.errorbar(lng[::skiplng], np.nanmean(edj, axis=0)[::skiplng], 
-            yerr=np.nanstd(edj, axis=0)[::skiplng], zorder=10, color='k', 
+        ax.errorbar(lng[::skiplng], np.nanmean(edj_jja, axis=0)[::skiplng], 
+            yerr=np.nanstd(edj_jja, axis=0)[::skiplng], zorder=10, color='k', 
             markersize=3, elinewidth=1.25, ecolor='k', fmt='o', 
             transform=ccrs.PlateCarree())
         ax.coastlines(lw=0.25, resolution='50m', color='k', zorder=3)
-        ax.set_extent([lng.min()-180., lng.max()-180., lat.min(), lat.max()])
+        ax.set_extent([lng.min()-180., lng.max()-180., 10, 80])
         ax.set_xticks([-180, -120, -60, 0, 60, 120, 180], crs=ccrs.PlateCarree())
         lng_formatter = LongitudeFormatter()
         ax.xaxis.set_major_formatter(lng_formatter)         
         ax.get_xaxis().set_ticklabels([])
-        ax.set_yticks([0, 30, 60, 90], crs=ccrs.PlateCarree())
+        ax.set_yticks([15, 45, 75], crs=ccrs.PlateCarree())
         lat_formatter = LatitudeFormatter()    
-        ax.yaxis.set_major_formatter(lat_formatter)    
-        ax.tick_params(which='major', labelsize=8)
+        ax.yaxis.set_major_formatter(lat_formatter)
+        ax.tick_params(which='major', labelsize=9)
     ax4.set_xticks([-180, -120, -60, 0, 60, 120, 180], crs=ccrs.PlateCarree())    
     lng_formatter = LongitudeFormatter()
     ax4.xaxis.set_major_formatter(lng_formatter)       
@@ -1827,35 +1980,109 @@ def fig2():
         (ax2.get_position().y1-ax4.get_position().y0)] 
     ax1.set_position(pos1) # set a new position
     plt.savefig('/Users/ghkerr/phd/tracer/figs/'+'fig2.png', dpi=500)
+    plt.show()    
     return 
 
-def fig3(): 
+def fig3(lat, lng, TRAC_10_20_jja, TRAC_40_50_jja, TRAC_70_80_jja, 
+    TRAC_10_20_djf, TRAC_40_50_djf, TRAC_70_80_djf, edj_dist_jja, 
+    edj_dist_djf, edj_jja, edj_djf): 
     """
+    Parameters
+    ----------
+    lat : numpy.ndarray
+        Latitude coordinates for the Northern Hemisphere, units of degrees 
+        north, [lat,]                
+    lng : numpy.ndarray
+        Longitude coordinates for the Northern Hemisphere, units of degrees 
+        east, [lng,]    
+    TRAC_10_20_jja : numpy.ndarray
+        GEOS-Chem CO-like tracer for given pressure levels (n.b., column 
+        average is performed in function) with prescribed emissions from 10-20 
+        deg north for days during JJA 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]
+    TRAC_40_50_jja : numpy.ndarray
+        GEOS-Chem CO-like tracer for given pressure levels (n.b., column 
+        average is performed in function) with prescribed emissions from 40-50 
+        deg north for days during JJA 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]
+    TRAC_70_80_jja : numpy.ndarray
+        GEOS-Chem CO-like tracer for given pressure levels (n.b., column 
+        average is performed in function) with prescribed emissions from 70-80 
+        deg north for days during JJA 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]
+    TRAC_10_20_djf : numpy.ndarray
+        GEOS-Chem CO-like tracer for given pressure levels (n.b., column 
+        average is performed in function) with prescribed emissions from 10-20 
+        deg north for days during DJF 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]
+    TRAC_40_50_djf : numpy.ndarray
+        GEOS-Chem CO-like tracer for given pressure levels (n.b., column 
+        average is performed in function) with prescribed emissions from 40-50 
+        deg north for days during DJF 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]
+    TRAC_70_80_djf : numpy.ndarray
+        GEOS-Chem CO-like tracer for given pressure levels (n.b., column 
+        average is performed in function) with prescribed emissions from 70-80 
+        deg north for days during DJF 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]        
+    edj_dist_jja : numpy.ndarray
+        Distance from the jet stream for JJA 2008-2010, units of degrees, 
+        [time, lat, lng]
+    edj_dist_djf : numpy.ndarray
+        Distance from the jet stream for DJF 2008-2010, units of degrees, 
+        [time, lat, lng]    
+    edj_jja : numpy.ndarray
+        Latitude of the jet stream for JJA 2008-2010, units of degrees north,
+        [time, lng]
+    edj_djf : numpy.ndarray
+        Latitude of the jet stream for DJF 2008-2010, units of degrees north,
+        [time, lng]
+
+    Returns
+    -------
+    None    
     """  
     if lng[-1] != 360:
         lng[-1] = 360.    
-    fig = plt.figure(figsize=(7,6))
-    ax1 = plt.subplot2grid((3,2), (0,0), colspan=2,
+    fig = plt.figure(figsize=(14,5.5))
+    ax1 = plt.subplot2grid((3,4), (0,0), colspan=2,
         projection=ccrs.PlateCarree(central_longitude=0.))
-    ax2 = plt.subplot2grid((3,2), (1,0), colspan=2,
+    ax2 = plt.subplot2grid((3,4), (1,0), colspan=2,
         projection=ccrs.PlateCarree(central_longitude=0.))
-    ax3 = plt.subplot2grid((3,2), (2,0), colspan=2,
+    ax3 = plt.subplot2grid((3,4), (2,0), colspan=2,
         projection=ccrs.PlateCarree(central_longitude=0.))
-    ax1.set_title('(a) $\chi_{10-20^{\circ}}$', fontsize=12, x=0.02, ha='left')
-    ax2.set_title('(b) $\chi_{40-50^{\circ}}$', fontsize=12, x=0.02, ha='left')
-    ax3.set_title('(c) $\chi_{70-80^{\circ}}$', fontsize=12, x=0.02, ha='left')
-    # Loop through axes and plot
+    ax4 = plt.subplot2grid((3,4), (0,2), colspan=2,
+        projection=ccrs.PlateCarree(central_longitude=0.))
+    ax5 = plt.subplot2grid((3,4), (1,2), colspan=2,
+        projection=ccrs.PlateCarree(central_longitude=0.))
+    ax6 = plt.subplot2grid((3,4), (2,2), colspan=2,
+        projection=ccrs.PlateCarree(central_longitude=0.))    
+    ax1.set_title('(a) JJA $\chi_{10-20^{\circ}}$', fontsize=12, x=0.02, 
+        ha='left')
+    ax2.set_title('(c) JJA $\chi_{40-50^{\circ}}$', fontsize=12, x=0.02,
+        ha='left')
+    ax3.set_title('(e) JJA $\chi_{70-80^{\circ}}$', fontsize=12, x=0.02,
+        ha='left')
+    ax4.set_title('(b) DJF $\chi_{10-20^{\circ}}$', fontsize=12, x=0.02,
+        ha='left')
+    ax5.set_title('(d) DJF $\chi_{40-50^{\circ}}$', fontsize=12, x=0.02,
+        ha='left')
+    ax6.set_title('(f) DJF $\chi_{70-80^{\circ}}$', fontsize=12, x=0.02, 
+        ha='left')
+    # Loop through JJA axes and plot
     axes = [ax1, ax2, ax3]
-    for i, tracer in enumerate([TRAC_10_20, TRAC_40_50, TRAC_70_80]):
+    for i, tracer in enumerate([TRAC_10_20_jja, TRAC_40_50_jja, 
+        TRAC_70_80_jja]):
         # Calculate tracer-jet correlation and significance 
         r_tracerjet = globalo3_calculate.calculate_r(np.nanmean(tracer, axis=1), 
-            edj_dist, lat, lng)
+            edj_dist_jja, lat, lng)
         significance_r_tracerjet = globalo3_calculate.calculate_r_significance(
-            np.nanmean(tracer, axis=1), edj_dist, r_tracerjet, lat, lng)
+            np.nanmean(tracer, axis=1), edj_dist_jja, r_tracerjet, lat, lng)
         # Find (PW - EW) jet composites
         eqjet_lat, eqjet_lat_var, pwjet_lat, pwjet_lat_var, pwjet_tracer, \
             eqjet_tracer = globalo3_calculate.segregate_field_bylat(
-            np.nanmean(tracer, axis=1), lng_gc, edj, np.arange(0, len(tracer), 1))
+            np.nanmean(tracer, axis=1), lng, edj_jja, 
+            np.arange(0, len(tracer), 1))
         mb = axes[i].contourf(lng, lat, (pwjet_tracer-eqjet_tracer)*1e6,
             np.linspace(-0.2, 0.2, 11), cmap=plt.get_cmap('coolwarm'), 
             extend='both', transform=ccrs.PlateCarree(), zorder=2)
@@ -1865,96 +2092,729 @@ def fig3():
             zorder= 4)
         # Add eddy-driven jet
         skiplng = 5
-        axes[i].errorbar(lng[::skiplng], np.nanmean(edj, axis=0)[::skiplng], 
-            yerr=np.nanstd(edj, axis=0)[::skiplng], zorder=10, color='k', 
+        axes[i].errorbar(lng[::skiplng], np.nanmean(edj_jja, axis=0)[::skiplng], 
+            yerr=np.nanstd(edj_jja, axis=0)[::skiplng], zorder=10, color='k', 
             markersize=3, elinewidth=1.25, ecolor='k', fmt='o', 
             transform=ccrs.PlateCarree())
         axes[i].coastlines(lw=0.25, resolution='50m', color='k', zorder=3)
-        axes[i].set_extent([lng.min()-180., lng.max()-180., lat.min(), lat.max()])
-        axes[i].set_xticks([-180, -120, -60, 0, 60, 120, 180], crs=ccrs.PlateCarree())
+        axes[i].set_extent([lng.min()-180., lng.max()-180., 10., 80.])
+        axes[i].set_xticks([-180, -120, -60, 0, 60, 120, 180], 
+            crs=ccrs.PlateCarree())
+        axes[i].get_xaxis().set_ticklabels([])
+        axes[i].set_yticks([15, 45, 75], crs=ccrs.PlateCarree())
+        lat_formatter = LatitudeFormatter()    
+        axes[i].yaxis.set_major_formatter(lat_formatter)
+        axes[i].tick_params(which='major', labelsize=9)
+    # For DJF
+    axes = [ax4, ax5, ax6]
+    for i, tracer in enumerate([TRAC_10_20_djf, TRAC_40_50_djf, 
+        TRAC_70_80_djf]):
+        r_tracerjet = globalo3_calculate.calculate_r(np.nanmean(tracer, axis=1), 
+            edj_dist_djf, lat, lng)
+        significance_r_tracerjet = globalo3_calculate.calculate_r_significance(
+            np.nanmean(tracer, axis=1), edj_dist_djf, r_tracerjet, lat, lng)
+        eqjet_lat, eqjet_lat_var, pwjet_lat, pwjet_lat_var, pwjet_tracer, \
+            eqjet_tracer = globalo3_calculate.segregate_field_bylat(
+            np.nanmean(tracer, axis=1), lng_gc, edj_djf, 
+            np.arange(0, len(tracer), 1))
+        mb = axes[i].contourf(lng, lat, (pwjet_tracer-eqjet_tracer)*1e6,
+            np.linspace(-0.2, 0.2, 11), cmap=plt.get_cmap('coolwarm'), 
+            extend='both', transform=ccrs.PlateCarree(), zorder=2)
+        axes[i].contourf(lng, lat, significance_r_tracerjet, 
+            hatches=['//////'], colors='none', transform=ccrs.PlateCarree(), 
+            zorder= 4)
+        skiplng = 5
+        axes[i].errorbar(lng[::skiplng], np.nanmean(edj_djf, axis=0)[::skiplng], 
+            yerr=np.nanstd(edj_djf, axis=0)[::skiplng], zorder=10, color='k', 
+            markersize=3, elinewidth=1.25, ecolor='k', fmt='o', 
+            transform=ccrs.PlateCarree())
+        axes[i].coastlines(lw=0.25, resolution='50m', color='k', zorder=3)
+        axes[i].set_extent([lng.min()-180., lng.max()-180., 10., 80.])
+        axes[i].set_xticks([-180, -120, -60, 0, 60, 120, 180], 
+            crs=ccrs.PlateCarree())
         lng_formatter = LongitudeFormatter()
         axes[i].xaxis.set_major_formatter(lng_formatter)         
         axes[i].get_xaxis().set_ticklabels([])
-        axes[i].set_yticks([0, 30, 60, 90], crs=ccrs.PlateCarree())
+        axes[i].set_yticks([15, 45, 75], crs=ccrs.PlateCarree())
         lat_formatter = LatitudeFormatter()    
-        axes[i].yaxis.set_major_formatter(lat_formatter)    
-        axes[i].tick_params(which='major', labelsize=8)
-    ax3.set_xticks([-180, -120, -60, 0, 60, 120, 180], crs=ccrs.PlateCarree())    
-    lng_formatter = LongitudeFormatter()
-    ax3.xaxis.set_major_formatter(lng_formatter)       
-    ax3.tick_params(which='major', labelsize=9)
-    plt.subplots_adjust(left=0.05, right=0.85, hspace=0.3)
+        axes[i].get_yaxis().set_ticklabels([])
+        axes[i].tick_params(which='major', labelsize=9)
+    for ax in [ax3, ax6]:
+        ax.set_xticks([-180, -120, -60, 0, 60, 120, 180], 
+            crs=ccrs.PlateCarree())    
+        lng_formatter = LongitudeFormatter()
+        ax.xaxis.set_major_formatter(lng_formatter)       
+        ax.tick_params(which='major', labelsize=9)
+        plt.subplots_adjust(left=0.05, right=0.88, hspace=0.3, wspace=0.25)
     # Add colorbar
-    cbaxes = fig.add_axes([ax1.get_position().x1+0.03, ax3.get_position().y0, 
-        0.02, ax1.get_position().y1-ax3.get_position().y0]) 
+    cbaxes = fig.add_axes([ax4.get_position().x1+0.03, ax6.get_position().y0, 
+        0.02, ax4.get_position().y1-ax6.get_position().y0]) 
     cb = plt.colorbar(mb, cax=cbaxes, orientation='vertical')
     cb.set_label(label='[ppm]', size=12)
     cb.set_ticks(np.linspace(-0.2, 0.2, 11))
     cb.ax.tick_params(labelsize=9)
     plt.savefig('/Users/ghkerr/phd/tracer/figs/'+'fig3.png', dpi=500)
+    plt.show()    
     return
 
-def fig4():
+def fig4(lat, lng, TRAC_10_20_jja, TRAC_20_30_jja, TRAC_30_40_jja, 
+    TRAC_40_50_jja, TRAC_50_60_jja, TRAC_60_70_jja, TRAC_70_80_jja, 
+    TRAC_10_20_djf, TRAC_20_30_djf, TRAC_30_40_djf, TRAC_40_50_djf, 
+    TRAC_50_60_djf, TRAC_60_70_djf, TRAC_70_80_djf, V_jja, V_djf, edj_dist_jja, 
+    edj_dist_djf, edj_jja, edj_djf):
     """
     """
     import scipy.interpolate
-    fig = plt.figure(figsize=(7,6))
-    ax1 = plt.subplot2grid((2,1), (0,0))
-    ax2 = plt.subplot2grid((2,1), (1,0))
+    fig = plt.figure(figsize=(7.5,8))
+    ax1 = plt.subplot2grid((3,1), (0,0))
+    ax2 = plt.subplot2grid((3,1), (1,0))
+    ax3 = plt.subplot2grid((3,1), (2,0))
     ax1.set_title('(a) r(V, $\phi_{jet}$)', fontsize=12, x=0.02, ha='left')
-    ax2.set_title('(b) r($\chi$, $\phi_{jet}$)', fontsize=12, x=0.02, ha='left')
+    ax2.set_title('(b) JJA r($\chi$, $\phi_{jet}$)', fontsize=12, x=0.02, 
+        ha='left')
+    ax3.set_title('(c) DJF r($\chi$, $\phi_{jet}$)', fontsize=12, x=0.02, 
+        ha='left')    
     # Draw y = 0 (no correlation) line
-    ax1.axhline(y=0, xmin=0, xmax=90, lw=0.75, ls='--', color='grey')
-    ax2.axhline(y=0, xmin=0, xmax=90, lw=0.75, ls='--', color='grey')
+    ax1.axhline(y=0, xmin=0, xmax=90, lw=0.75, ls='--', color='black')
+    ax2.axhline(y=0, xmin=0, xmax=90, lw=0.75, ls='--', color='black')
+    ax3.axhline(y=0, xmin=0, xmax=90, lw=0.75, ls='--', color='black')    
     # Determine near-surface meridional wind-jet correlation
-    r_Vjet = globalo3_calculate.calculate_r(np.nanmean(V, axis=1), edj_dist, 
-        lat, lng)
-    ax1.plot(lat, np.nanmean(r_Vjet, axis=1), '-k', lw=2)
-    # Indicate jet; errorbars represent the zonally-averaged standard deviation 
-    # of the daily variations in the position of the jet
-    ax1.errorbar(np.nanmean(edj, axis=tuple((0,1))), 0., 
-        xerr=np.nanmean(np.nanstd(edj, axis=0)), zorder=10, color='k', 
-        markersize=5, elinewidth=2, ecolor='k', fmt='o')
-    # Loop through tracers 
-    for i, tracer in enumerate([TRAC_0_10, TRAC_10_20, TRAC_20_30, TRAC_30_40, 
-        TRAC_40_50, TRAC_50_60, TRAC_60_70, TRAC_70_80, TRAC_80_90]):
+    r_Vjet = globalo3_calculate.calculate_r(np.nanmean(V_jja, axis=1), 
+        edj_dist_jja, lat, lng)
+    ax1.plot(lat, np.nanmean(r_Vjet, axis=1), ls='solid', color='k', lw=2,
+        label='JJA')
+    r_Vjet_djf = globalo3_calculate.calculate_r(np.nanmean(V_djf, axis=1), 
+        edj_dist_djf, lat, lng)
+    ax1.plot(lat, np.nanmean(r_Vjet_djf, axis=1), ls='dashdot', color='k', 
+        lw=2, label='DJF')
+    # Loop through tracers for JJA
+    for i, tracer in enumerate([TRAC_10_20_jja, TRAC_20_30_jja, 
+        TRAC_30_40_jja, TRAC_40_50_jja, TRAC_50_60_jja, TRAC_60_70_jja, 
+        TRAC_70_80_jja]):
         tracer = np.nanmean(tracer, axis=1)
         # Calculate tracer-jet correlation
-        r_tracerjet = globalo3_calculate.calculate_r(tracer, edj_dist, lat, 
+        r_tracerjet = globalo3_calculate.calculate_r(tracer, edj_dist_jja, lat, 
             lng)
         ax2.plot(lat, np.nanmean(r_tracerjet, axis=1), color=COLORS[i], 
             label=LABELS[i], lw=2)
+    # Loop through tracers for DJF
+    for i, tracer in enumerate([TRAC_10_20_djf, TRAC_20_30_djf, 
+        TRAC_30_40_djf, TRAC_40_50_djf, TRAC_50_60_djf, TRAC_60_70_djf, 
+        TRAC_70_80_djf]):
+        tracer = np.nanmean(tracer, axis=1)
+        # Calculate tracer-jet correlation
+        r_tracerjet = globalo3_calculate.calculate_r(tracer, edj_dist_djf, lat, 
+            lng)
+        ax3.plot(lat, np.nanmean(r_tracerjet, axis=1), color=COLORS[i], 
+            label=LABELS[i], lw=2)
     # Aesthetics
-    for ax in [ax1, ax2]:
-        ax.set_xlim([0, lat.max()])
-        ax.set_xticks([0, 15, 30, 45, 60, 75, lat.max()])
+    for ax in [ax1, ax2, ax3]:
+        ax.set_xlim([10, 80])
+        ax.set_xticks([10, 20, 30, 40, 50, 60, 70, 80])
         ax.set_xticklabels([])
         ax.set_ylabel('[$\cdot$]', fontsize=12) 
         ax.tick_params(which='major', labelsize=9)
-    ax1.set_ylim([-0.16, 0.16])
-    ax1.set_yticks(np.linspace(-0.16, 0.16, 5))
+    ax1.set_ylim([-0.2, 0.2])
+    ax1.set_yticks(np.linspace(-0.2, 0.2, 5))
     ax2.set_ylim([-0.28, 0.28])
     ax2.set_yticks(np.linspace(-0.28, 0.28, 5))
-    ax2.set_xticklabels(['0$^{\circ}$', '15$^{\circ}$N', '30$^{\circ}$N',
-        '45$^{\circ}$N', '60$^{\circ}$N', '75$^{\circ}$N', '90$^{\circ}$N']) 
-    ax2.legend(bbox_to_anchor=[1.13, -0.2, 0, 0], ncol=5, frameon=False, 
+    ax3.set_ylim([-0.36, 0.36])
+    ax3.set_yticks(np.linspace(-0.36, 0.36, 5))    
+    ax3.set_xticklabels(['10$^{\circ}$N', '20$^{\circ}$N', '30$^{\circ}$N',
+        '40$^{\circ}$N', '50$^{\circ}$N', '60$^{\circ}$N', '70$^{\circ}$N',
+        '80$^{\circ}$N']) 
+    ax1.legend(loc=1, ncol=1, frameon=False, fontsize=12, handlelength=3)
+    ax3.legend(bbox_to_anchor=[0.95, -0.2, 0, 0], ncol=4, frameon=False, 
         fontsize=12)
-    plt.subplots_adjust(hspace=0.3, bottom=0.2)
-    # # Interpolate the zonally-averaged r(V, jet) and find where the 
-    # # r(V, jet) = 0.; this is kind of kludgey, so the values are hard-coded in
-    # interp = scipy.interpolate.interp1d(lat, np.nanmean(r_Vjet, axis=-1))
-    # r_Vjet_zm_interp = []
-    # lat_interp = np.linspace(0, lat.max(), 500)
-    # for x in lat_interp:
-    #     r_Vjet_zm_interp.append(interp(x))
-    # r_Vjet_zm_interp = np.abs(r_Vjet_zm_interp)
+    plt.subplots_adjust(hspace=0.3, top=0.95, bottom=0.15)
+    # Interpolate the zonally-averaged r(V, jet) and find where the 
+    # r(V, jet) = 0.; this is kind of kludgey, so the values are hard-coded in
+    interp = scipy.interpolate.interp1d(lat, np.nanmean(r_Vjet, axis=-1))
+    interp_djf = scipy.interpolate.interp1d(lat, np.nanmean(r_Vjet_djf, 
+        axis=-1))
+    r_Vjet_zm_interp = []
+    r_Vjet_zm_interp_djf = []
+    lat_interp = np.linspace(0, lat.max(), 500)
+    for x in lat_interp:
+        r_Vjet_zm_interp.append(interp(x))
+    r_Vjet_zm_interp = np.abs(r_Vjet_zm_interp)
+    for x in lat_interp:
+        r_Vjet_zm_interp_djf.append(interp_djf(x))
+    r_Vjet_zm_interp_djf = np.abs(r_Vjet_zm_interp_djf)
     # # Find index of 4 smallest values since r(V, jet) = 0. four times
     # r_Vjet_zm_interp.argsort()[:4] # however this has some repeats, so increase
     # # to greater values to pull off values 
     # lat_where_0 = lat_interp[[114, 211, 372, 494]]
-    lat_where_0 = np.array([20.44689379, 37.84468938, 66.72144289, 88.60320641])
+    # Indicate jet; errorbars represent the zonally-averaged standard deviation 
+    # of the daily variations in the position of the jet
+    ax2.errorbar(np.nanmean(edj_jja, axis=tuple((0,1))), 0.0, 
+        xerr=np.nanmean(np.nanstd(edj_jja, axis=0)), zorder=10, color='k', 
+        markersize=8, elinewidth=3., ecolor='k', fmt='o')
+    ax3.errorbar(np.nanmean(edj_djf, axis=tuple((0,1))), 0.0, 
+        xerr=np.nanmean(np.nanstd(edj_djf, axis=0)), zorder=10, color='k', 
+        markersize=8, elinewidth=3., ecolor='k', fmt='o')    
+    lat_where_0 = np.array([20.44689379, 37.84468938, 66.72144289, 
+        88.60320641])
+    lat_where_0_djf = np.array([6.0981963, 20.8056, 64.2104])
     for x in lat_where_0: 
-        ax1.axvline(x=x, c='grey', lw=0.75, ls='--', zorder=0)
-        ax2.axvline(x=x, c='grey', lw=0.75, ls='--', zorder=0)
+        ax2.axvline(x=x, c='k', lw=0.75, ls='--', zorder=0)
+    for x in lat_where_0_djf: 
+        ax3.axvline(x=x, c='k', lw=0.75, ls='--', zorder=0)        
     plt.savefig('/Users/ghkerr/phd/tracer/figs/'+'fig4.png', dpi=500)
+    plt.show()    
     return
+
+def fig5(lat, lng, lev, TRAC_10_20_jja, TRAC_40_50_jja, TRAC_70_80_jja, 
+    V_jja, edj_jja):
+    """
+
+    Parameters
+    ----------
+    lat : numpy.ndarray
+        Latitude coordinates for the Northern Hemisphere, units of degrees 
+        north, [lat,]                
+    lng : numpy.ndarray
+        Longitude coordinates for the Northern Hemisphere, units of degrees 
+        east, [lng,]    
+    lev : numpy.ndarray
+        Vertical level coordinates, units of hPa, [lev,]
+    TRAC_10_20_jja : numpy.ndarray
+        GEOS-Chem CO-like tracer with prescribed emissions from 10-20 deg north
+        for days during JJA 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]
+    TRAC_40_50_jja : numpy.ndarray
+        GEOS-Chem CO-like tracer with prescribed emissions from 40-50 deg north
+        for days during JJA 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]
+    TRAC_70_80_jja : numpy.ndarray
+        GEOS-Chem CO-like tracer with prescribed emissions from 70-80 deg north
+        for days during JJA 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]    
+    V_jja : numpy.ndarray
+        Meridional wind for JJA 2008-2010 (note that the levels should match 
+        that of the GEOS-Chem tracers), units of m s-1, [time, lev, lat, lng]
+    edj_jja : numpy.ndarray
+        Latitude of the jet stream for JJA 2008-2010, units of degrees north,
+        [time, lng]
+    
+    Returns
+    -------
+    None    
+    """
+    fig = plt.figure(figsize=(8,8))
+    ax1 = plt.subplot2grid((3,3), (0,0))
+    ax2 = plt.subplot2grid((3,3), (0,1))
+    ax3 = plt.subplot2grid((3,3), (0,2))
+    ax4 = plt.subplot2grid((3,3), (1,0))
+    ax5 = plt.subplot2grid((3,3), (1,1))
+    ax6 = plt.subplot2grid((3,3), (1,2))
+    ax7 = plt.subplot2grid((3,3), (2,0))
+    ax8 = plt.subplot2grid((3,3), (2,1))
+    ax9 = plt.subplot2grid((3,3), (2,2))
+    ax1.set_title('(a) All days', fontsize=12, x=0.02, ha='left')
+    ax2.set_title('(b) PW days', fontsize=12, x=0.02, ha='left')
+    ax3.set_title('(c) EW days', fontsize=12, x=0.02, ha='left')
+    ax4.set_title('(d)', fontsize=12, x=0.02, ha='left')
+    ax5.set_title('(e)', fontsize=12, x=0.02, ha='left')
+    ax6.set_title('(f)', fontsize=12, x=0.02, ha='left')
+    ax7.set_title('(g)', fontsize=12, x=0.02, ha='left')
+    ax8.set_title('(h)', fontsize=12, x=0.02, ha='left')
+    ax9.set_title('(i)', fontsize=12, x=0.02, ha='left')
+    # Loop through axes
+    axes = [ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8, ax9]
+    for i, tracer in enumerate([TRAC_10_20_jja, TRAC_40_50_jja, 
+        TRAC_70_80_jja]):
+        # Calculate components of zonal- and time-mean transport for tracer 
+        # from GEOSChem for all days 
+        tracer_total, tracer_mean, tracer_eddy = \
+            globalo3_calculate.verticallyintegrated_meridional_flux(
+            tracer, V_jja, np.arange(0, len(tracer), 1), lat, lng, lev, 
+            985., 800., (28/28.97))
+        # Separate into PW and EW days
+        Vcolumn_eqjet, Vcolumn_pwjet, tracer_eqjet, tracer_pwjet = \
+            globalo3_calculate.sortfield_byjetlat_column(V_jja, tracer, 
+            edj_jja, lng, lat, lev, psize=30) 
+        # Zonal- and time-mean transport for PW jet 
+        pwjet_tracer_total, pwjet_tracer_mean, pwjet_tracer_eddy = \
+            globalo3_calculate.verticallyintegrated_meridional_flux(
+            tracer_pwjet, Vcolumn_pwjet, np.arange(0, len(tracer_pwjet), 1), 
+            lat, lng, lev, 955., 800., (28/28.97))        
+        # Zonal- and time-mean transport for EW jet 
+        eqjet_tracer_total, eqjet_tracer_mean, eqjet_tracer_eddy = \
+            globalo3_calculate.verticallyintegrated_meridional_flux(
+            tracer_eqjet, Vcolumn_eqjet, np.arange(0, len(tracer_eqjet), 1), 
+            lat, lng, lev, 955., 800., (28/28.97))          
+        # Plotting
+        axes[(3*i)].plot(lat, tracer_total, ls='-', color='#A2C3E0', lw=2, 
+            label='Total', zorder=2)
+        axes[(3*i)].plot(lat, tracer_mean, ls='-', color='#EF9802', lw=2, 
+            label='Mean', zorder=3)
+        axes[(3*i)].plot(lat, tracer_eddy, ls='-', color='#3F79B7', lw=2, 
+            label='Eddy', zorder=4)
+        # PW days  
+        axes[(3*i)+1].plot(lat, pwjet_tracer_total, ls='-', color='#A2C3E0', 
+            lw=2, label='Total', zorder=2)
+        axes[(3*i)+1].plot(lat, pwjet_tracer_mean, ls='-', color='#EF9802', 
+            lw=2, label='Mean', zorder=3)
+        axes[(3*i)+1].plot(lat, pwjet_tracer_eddy, ls='-', color='#3F79B7', 
+            lw=2, label='Eddy', zorder=4)    
+        # EW days  
+        axes[(3*i)+2].plot(lat, eqjet_tracer_total, ls='-', color='#A2C3E0', 
+            lw=2, label='Total', zorder=2)
+        axes[(3*i)+2].plot(lat, eqjet_tracer_mean, ls='-', color='#EF9802', 
+            lw=2, label='Mean', zorder=3)
+        axes[(3*i)+2].plot(lat, eqjet_tracer_eddy, ls='-', color='#3F79B7', 
+            lw=2, label='Eddy', zorder=4)        
+    # Set xlim
+    for ax in axes:
+        ax.set_xlim([10,80])
+        ax.set_xticks(np.linspace(15, 75, 5))
+        ax.set_xticklabels([''])
+        ax.hlines(0, xmin=ax.get_xlim()[0], xmax=ax.get_xlim()[1], zorder=1, 
+            linestyles='--', linewidths=0.75)
+    # Set ylim
+    for ax in [ax1, ax2, ax3]:
+        ax.set_ylim([-50000,100000])
+        ax.set_yticks(np.linspace(-50000,100000,4))
+        ax.set_yticklabels([])
+    ax1.set_yticklabels(['-50000','0','50000','100000'])
+    for ax in [ax4, ax5, ax6]:
+        ax.set_ylim([-80000,80000])
+        ax.set_yticks(np.linspace(-80000,80000,5))
+        ax.set_yticklabels([])
+    ax4.set_yticklabels(['-80000','-40000','0','40000','80000'])
+    for ax in [ax7, ax8, ax9]:
+        ax.set_ylim([-45000,30000])
+        ax.set_yticks(np.linspace(-45000,30000,5))
+        ax.set_yticklabels([])
+    ax7.set_yticklabels(['-45000','-26250','-7500','11250','30000'])
+    # Axis labels
+    for ax in [ax7, ax8, ax9]:
+        ax.set_xticklabels(['15', '30', '45', '60', '75'])    
+        ax.set_xlabel('Latitude [$^{\circ}$N]', fontsize=12)
+    ax1.set_ylabel('$\chi_{10-20^{\circ}}$ [kg s$^{-1}$]', fontsize=12)
+    ax4.set_ylabel('$\chi_{40-50^{\circ}}$ [kg s$^{-1}$]', fontsize=12)
+    ax7.set_ylabel('$\chi_{70-80^{\circ}}$ [kg s$^{-1}$]', fontsize=12)
+    for ax in axes:
+        ax.tick_params(which='major', labelsize=9)
+    ax8.legend(bbox_to_anchor=[1.4, -0.32, 0, 0], ncol=3, frameon=False, 
+        fontsize=12)
+    plt.subplots_adjust(left=0.15, bottom=0.15)
+    plt.savefig('/Users/ghkerr/phd/tracer/figs/'+'fig5.png', dpi=500)
+    plt.show()    
+    return
+
+def fig6(lat, lng, V_jja, V_djf, edj_jja, edj_djf):
+    """
+    Parameters
+    ----------
+    lat : numpy.ndarray
+        Latitude coordinates for the Northern Hemisphere, units of degrees 
+        north, [lat,]                
+    lng : numpy.ndarray
+        Longitude coordinates for the Northern Hemisphere, units of degrees 
+        east, [lng,]    
+    V_jja : numpy.ndarray
+        Meridional wind for JJA 2008-2010 (note that the levels should match 
+        that of the GEOS-Chem tracers), units of m s-1, [time, lev, lat, lng]
+    V_djf : numpy.ndarray
+        Meridional wind for DJF 2008-2010 (note that the levels should match 
+        that of the GEOS-Chem tracers), units of m s-1, [time, lev, lat, lng]
+    edj_jja : numpy.ndarray
+        Latitude of the jet stream for JJA 2008-2010, units of degrees north,
+        [time, lng]
+    edj_djf : numpy.ndarray
+        Latitude of the jet stream for DJF 2008-2010, units of degrees north,
+        [time, lng]
+    
+    Returns
+    -------
+    None     
+    """
+    if lng[-1] != 360:
+        lng[-1] = 360.  
+    fig = plt.figure(figsize=(7,3.5))
+    ax1 = plt.subplot2grid((2,2), (0,0), colspan=2,
+        projection=ccrs.PlateCarree(central_longitude=0.))
+    ax2 = plt.subplot2grid((2,2), (1,0), colspan=2,
+        projection=ccrs.PlateCarree(central_longitude=0.))
+    ax1.set_title('(a) JJA V', fontsize=12, x=0.02, ha='left')
+    ax2.set_title('(b) DJF V', fontsize=12, x=0.02, ha='left')
+    # Calculate tracer-jet correlation, significance, and PW/EW composites for 
+    # JJA and DJF
+    r_Vjet_jja = globalo3_calculate.calculate_r(np.nanmean(V_jja, axis=1), 
+        edj_dist_jja, lat, lng)
+    r_Vjet_djf = globalo3_calculate.calculate_r(np.nanmean(V_djf, axis=1), 
+        edj_dist_djf, lat, lng)
+    significance_r_Vjet_jja = \
+        globalo3_calculate.calculate_r_significance(np.nanmean(V_jja, axis=1),  
+        edj_dist_jja, r_Vjet_jja, lat, lng)
+    significance_r_Vjet_djf = \
+        globalo3_calculate.calculate_r_significance(np.nanmean(V_djf, axis=1),  
+        edj_dist_djf, r_Vjet_djf, lat, lng)
+    eqjet_lat_jja, eqjet_lat_var_jja, pwjet_lat_jja, pwjet_lat_var_jja, \
+        pwjet_V_jja, eqjet_V_jja = globalo3_calculate.segregate_field_bylat(
+        np.nanmean(V_jja, axis=1), lng, edj_jja, np.arange(0, len(V_jja), 1))
+    eqjet_lat_djf, eqjet_lat_var_djf, pwjet_lat_djf, pwjet_lat_var_djf, \
+        pwjet_V_djf, eqjet_V_djf = globalo3_calculate.segregate_field_bylat(
+        np.nanmean(V_djf, axis=1), lng, edj_djf, np.arange(0, len(V_djf), 1))    
+    # Plot (PW-EW) composites
+    clevs = np.linspace(-5, 5, 13)
+    mb = ax1.contourf(lng, lat, (pwjet_V_jja-eqjet_V_jja),
+        clevs, cmap=plt.get_cmap('coolwarm'), extend='both', 
+        transform=ccrs.PlateCarree(), zorder=2)
+    mb = ax2.contourf(lng, lat, (pwjet_V_djf-eqjet_V_djf),
+        clevs, cmap=plt.get_cmap('coolwarm'), extend='both', 
+        transform=ccrs.PlateCarree(), zorder=2)
+    # Hatching for significance
+    ax1.contourf(lng, lat, significance_r_Vjet_jja, 
+        hatches=['//////'], colors='none', transform=ccrs.PlateCarree(), 
+        zorder=4)
+    ax2.contourf(lng, lat, significance_r_Vjet_djf, 
+        hatches=['//////'], colors='none', transform=ccrs.PlateCarree(), 
+        zorder=4)
+    # Contours indicating mean V 
+    CS = ax1.contour(lng, lat, np.nanmean(V_jja, axis=tuple((0,1))), 
+        [-5,5], linewidths=1., colors='k')
+    CS = ax2.contour(lng, lat, np.nanmean(V_djf, axis=tuple((0,1))), 
+        [-5,5], linewidths=1., colors='k')
+    # Eddy-driven jet    
+    skiplng = 5
+    ax1.errorbar(lng[::skiplng], np.nanmean(edj_jja, axis=0)[::skiplng], 
+        yerr=np.nanstd(edj_jja, axis=0)[::skiplng], zorder=10, color='k', 
+        markersize=3, elinewidth=1.25, ecolor='k', fmt='o', 
+        transform=ccrs.PlateCarree())
+    ax2.errorbar(lng[::skiplng], np.nanmean(edj_djf, axis=0)[::skiplng], 
+        yerr=np.nanstd(edj_djf, axis=0)[::skiplng], zorder=10, color='k', 
+        markersize=3, elinewidth=1.25, ecolor='k', fmt='o', 
+        transform=ccrs.PlateCarree())
+    # Aesthetics
+    for ax in [ax1, ax2]:
+        ax.coastlines(lw=0.25, resolution='50m', color='k', zorder=3)
+        ax.set_extent([lng.min()-180., lng.max()-180., 10, 80])
+        ax.set_xticks([-180, -120, -60, 0, 60, 120, 180], 
+            crs=ccrs.PlateCarree())
+        lng_formatter = LongitudeFormatter()
+        ax.xaxis.set_major_formatter(lng_formatter)         
+        ax.get_xaxis().set_ticklabels([])
+        ax.set_yticks([15, 45, 75], crs=ccrs.PlateCarree())
+        lat_formatter = LatitudeFormatter()    
+        ax.yaxis.set_major_formatter(lat_formatter)    
+        ax.tick_params(which='major', labelsize=9)
+    ax2.set_xticks([-180, -120, -60, 0, 60, 120, 180], crs=ccrs.PlateCarree())    
+    lng_formatter = LongitudeFormatter()
+    ax2.xaxis.set_major_formatter(lng_formatter)       
+    ax2.tick_params(which='major', labelsize=9)
+    plt.subplots_adjust(left=0.1, right=0.85, hspace=0.2)
+    # Add colorbar
+    cbaxes = fig.add_axes([ax2.get_position().x1+0.03, ax2.get_position().y0, 
+        0.02, ax1.get_position().y1-ax2.get_position().y0])
+    cb = plt.colorbar(mb, cax=cbaxes, orientation='vertical')
+    cb.set_label(label='[m s$^{-1}$]', size=12)
+    cb.set_ticks(np.linspace(-5, 5, 11))
+    cb.ax.tick_params(labelsize=9)
+    plt.savefig('/Users/ghkerr/phd/tracer/figs/'+'fig6.png', dpi=500)
+    plt.show()    
+    return 
+    
+def fig7(lat, lng, o3_jja, o3_djf, TRAC_10_20_jja, TRAC_40_50_jja, 
+    TRAC_70_80_jja, TRAC_10_20_djf, TRAC_40_50_djf, TRAC_70_80_djf, V_jja, 
+    V_djf, edj_dist_jja, edj_dist_djf, edj_jja, edj_djf):
+    """
+
+    Parameters
+    ----------
+    lat : numpy.ndarray
+        Latitude coordinates for the Northern Hemisphere, units of degrees 
+        north, [lat,]                
+    lng : numpy.ndarray
+        Longitude coordinates for the Northern Hemisphere, units of degrees 
+        east, [lng,]          
+    o3_jja : numpy.ndarray
+        Daily surface-level O3 for JJA 2008-2010, units of ppbv, [time, lat, 
+        lng]
+    o3_djf : numpy.ndarray
+        Daily surface-level O3 for DJF 2008-2010, units of ppbv, [time, lat, 
+        lng]    
+    TRAC_10_20_jja : numpy.ndarray
+        GEOS-Chem CO-like tracer for given pressure levels (n.b., column 
+        average is performed in function) with prescribed emissions from 10-20 
+        deg north for days during JJA 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]
+    TRAC_40_50_jja : numpy.ndarray
+        GEOS-Chem CO-like tracer for given pressure levels (n.b., column 
+        average is performed in function) with prescribed emissions from 40-50 
+        deg north for days during JJA 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]
+    TRAC_70_80_jja : numpy.ndarray
+        GEOS-Chem CO-like tracer for given pressure levels (n.b., column 
+        average is performed in function) with prescribed emissions from 70-80 
+        deg north for days during JJA 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]
+    TRAC_10_20_djf : numpy.ndarray
+        GEOS-Chem CO-like tracer for given pressure levels (n.b., column 
+        average is performed in function) with prescribed emissions from 10-20 
+        deg north for days during DJF 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]
+    TRAC_40_50_djf : numpy.ndarray
+        GEOS-Chem CO-like tracer for given pressure levels (n.b., column 
+        average is performed in function) with prescribed emissions from 40-50 
+        deg north for days during DJF 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]
+    TRAC_70_80_djf : numpy.ndarray
+        GEOS-Chem CO-like tracer for given pressure levels (n.b., column 
+        average is performed in function) with prescribed emissions from 70-80 
+        deg north for days during DJF 2008-2010, units of volume mixing ratio, 
+        [time, lev, lat, lng]   
+    V_jja : numpy.ndarray
+        Meridional wind for JJA 2008-2010 (note that the levels should match 
+        that of the GEOS-Chem tracers), units of m s-1, [time, lev, lat, lng]
+    V_djf : numpy.ndarray
+        Meridional wind for DJF 2008-2010 (note that the levels should match 
+        that of the GEOS-Chem tracers), units of m s-1, [time, lev, lat, lng]
+    edj_dist_jja : numpy.ndarray
+        Distance from the jet stream for JJA 2008-2010, units of degrees, 
+        [time, lat, lng]
+    edj_dist_djf : numpy.ndarray
+        Distance from the jet stream for DJF 2008-2010, units of degrees, 
+        [time, lat, lng]    
+    edj_jja : numpy.ndarray
+        Latitude of the jet stream for JJA 2008-2010, units of degrees north,
+        [time, lng]
+    edj_djf : numpy.ndarray
+        Latitude of the jet stream for DJF 2008-2010, units of degrees north,
+        [time, lng]
+
+    Returns
+    -------
+    None          
+    """    
+    from matplotlib.patches import Patch
+    if lng[-1] != 360:
+        lng[-1] = 360.
+    fig = plt.figure(figsize=(14,7.4))
+    ax1 = plt.subplot2grid((4,4), (0,0), colspan=2,
+        projection=ccrs.PlateCarree(central_longitude=0.))
+    ax2 = plt.subplot2grid((4,4), (1,0), colspan=2,
+        projection=ccrs.PlateCarree(central_longitude=0.))
+    ax3 = plt.subplot2grid((4,4), (2,0), colspan=2,
+        projection=ccrs.PlateCarree(central_longitude=0.))
+    ax4 = plt.subplot2grid((4,4), (3,0), colspan=2,
+        projection=ccrs.PlateCarree(central_longitude=0.))
+    ax5 = plt.subplot2grid((4,4), (0,2), colspan=2,
+        projection=ccrs.PlateCarree(central_longitude=0.))
+    ax6 = plt.subplot2grid((4,4), (1,2), colspan=2,
+        projection=ccrs.PlateCarree(central_longitude=0.))
+    ax7 = plt.subplot2grid((4,4), (2,2), colspan=2,
+        projection=ccrs.PlateCarree(central_longitude=0.))
+    ax8 = plt.subplot2grid((4,4), (3,2), colspan=2,
+        projection=ccrs.PlateCarree(central_longitude=0.))
+    ax1.set_title('(a) JJA r($\chi_{10-20^{\circ}}$, $\phi_{jet}$)', 
+        fontsize=12, x=0.02, ha='left')
+    ax2.set_title('(c) JJA r($\chi_{40-50^{\circ}}$, $\phi_{jet}$)', 
+        fontsize=12, x=0.02, ha='left')
+    ax3.set_title('(e) JJA r($\chi_{70-80^{\circ}}$, $\phi_{jet}$)', 
+        fontsize=12, x=0.02, ha='left')
+    ax4.set_title('(g) JJA r(O$_{3}$, $\phi_{jet}$)', 
+        fontsize=12, x=0.02, ha='left')
+    ax5.set_title('(b) DJF r($\chi_{10-20^{\circ}}$, $\phi_{jet}$)', 
+        fontsize=12, x=0.02, ha='left')
+    ax6.set_title('(d) DJF r($\chi_{40-50^{\circ}}$, $\phi_{jet}$)', 
+        fontsize=12, x=0.02, ha='left')
+    ax7.set_title('(f) DJF r($\chi_{70-80^{\circ}}$, $\phi_{jet}$)', 
+        fontsize=12, x=0.02, ha='left')
+    ax8.set_title('(h) DJF r(O$_3$, $\phi_{jet}$)', 
+        fontsize=12, x=0.02, ha='left')
+    clevs = np.linspace(-0.5, 0.5, 11)
+    # Plot filled contours
+    cmap = plt.get_cmap('coolwarm')
+    # Determine near-surface meridional wind-jet correlation
+    r_Vjet_jja = globalo3_calculate.calculate_r(np.nanmean(V_jja, axis=1), 
+        edj_dist_jja, lat, lng)
+    r_Vjet_djf = globalo3_calculate.calculate_r(np.nanmean(V_djf, axis=1), 
+        edj_dist_djf, lat, lng)
+    # Loop through tracers/O3 for JJA
+    axes = [ax1, ax2, ax3, ax4]
+    for i,tracer in enumerate([np.nanmean(TRAC_10_20_jja, axis=1), 
+        np.nanmean(TRAC_40_50_jja, axis=1), np.nanmean(TRAC_70_80_jja, axis=1),
+        o3_jja]):
+        # Determine tracer-jet correlation
+        r_tracerjet = globalo3_calculate.calculate_r(tracer, edj_dist_jja, lat, 
+            lng)
+        # Column- and time-averaged tracer
+        tracer = np.nanmean(tracer, axis=0)
+        # Loop through each longitude and calculate the latitudinal gradient
+        grad_tracer = np.empty(shape=tracer.shape)
+        grad_tracer[:] = np.nan
+        for spine_i in np.arange(0, len(lng), 1):
+            # Tracer concentrations for given "spine" of latitudes at a given 
+            # longitude
+            spine = tracer[:,spine_i]
+            grad_spine = np.gradient(spine)
+            grad_tracer[:,spine_i] = grad_spine
+        grad_tracer = np.array(grad_tracer)
+        expected = -1.*r_Vjet_jja*grad_tracer
+        # Find where the expected values are positive/negative
+        poz = np.empty(grad_tracer.shape)
+        poz[:] = np.nan
+        where_poz = np.where(expected > 0.)
+        poz[where_poz] = 1. 
+        neg = np.empty(grad_tracer.shape)
+        neg[:] = np.nan
+        where_neg = np.where(expected < 0.)
+        neg[where_neg] = 1.
+        # Plotting
+        mb = axes[i].contourf(lng, lat, r_tracerjet, clevs, cmap=cmap, 
+            extend='both', transform=ccrs.PlateCarree(), zorder=1)
+        axes[i].contourf(lng, lat, poz, hatches=['...'], colors='none', 
+            transform=ccrs.PlateCarree())
+        axes[i].contourf(lng, lat, neg, hatches=['///'], colors='none', 
+            transform=ccrs.PlateCarree())
+        # Add eddy-driven jet
+        skiplng = 5
+        axes[i].errorbar(lng[::skiplng], np.nanmean(edj_jja, axis=0)[::skiplng], 
+            yerr=np.nanstd(edj_jja, axis=0)[::skiplng], zorder=10, color='k', 
+            markersize=3, elinewidth=1.25, ecolor='k', fmt='o', 
+            transform=ccrs.PlateCarree())
+    # Loop through tracers/O3 for DJF
+    axes = [ax5, ax6, ax7, ax8]
+    for i,tracer in enumerate([np.nanmean(TRAC_10_20_djf, axis=1), 
+        np.nanmean(TRAC_40_50_djf, axis=1), np.nanmean(TRAC_70_80_djf, axis=1),
+        o3_djf]):
+        # Determine tracer-jet correlation
+        r_tracerjet = globalo3_calculate.calculate_r(tracer, edj_dist_djf, lat, 
+            lng)
+        # Column- and time-averaged tracer
+        tracer = np.nanmean(tracer, axis=0)
+        # Loop through each longitude and calculate the latitudinal gradient
+        grad_tracer = np.empty(shape=tracer.shape)
+        grad_tracer[:] = np.nan
+        for spine_i in np.arange(0, len(lng), 1):
+            # Tracer concentrations for given "spine" of latitudes at a given 
+            # longitude
+            spine = tracer[:,spine_i]
+            grad_spine = np.gradient(spine)
+            grad_tracer[:,spine_i] = grad_spine
+        grad_tracer = np.array(grad_tracer)
+        expected = -1.*r_Vjet_djf*grad_tracer
+        # Find where the expected values are positive/negative
+        poz = np.empty(grad_tracer.shape)
+        poz[:] = np.nan
+        where_poz = np.where(expected > 0.)
+        poz[where_poz] = 1. 
+        neg = np.empty(grad_tracer.shape)
+        neg[:] = np.nan
+        where_neg = np.where(expected < 0.)
+        neg[where_neg] = 1.
+        # Plotting
+        mb = axes[i].contourf(lng, lat, r_tracerjet, clevs, cmap=cmap, 
+            extend='both', transform=ccrs.PlateCarree(), zorder=1)
+        axes[i].contourf(lng, lat, poz, hatches=['...'], colors='none', 
+            transform=ccrs.PlateCarree())
+        axes[i].contourf(lng, lat, neg, hatches=['///'], colors='none', 
+            transform=ccrs.PlateCarree())
+        # Add eddy-driven jet
+        skiplng = 5
+        axes[i].errorbar(lng[::skiplng], np.nanmean(edj_djf, axis=0)[::skiplng], 
+            yerr=np.nanstd(edj_djf, axis=0)[::skiplng], zorder=10, color='k', 
+            markersize=3, elinewidth=1.25, ecolor='k', fmt='o', 
+            transform=ccrs.PlateCarree())
+    # Denote parallels and meridians
+    axes = [ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8]
+    for i in np.arange(0, len(axes), 1): 
+        axes[i].set_xticks([-180, -120, -60, 0, 60, 120, 180], 
+            crs=ccrs.PlateCarree())
+        lng_formatter = LongitudeFormatter()
+        axes[i].xaxis.set_major_formatter(lng_formatter)         
+        axes[i].get_xaxis().set_ticklabels([])
+        axes[i].set_yticks([15, 45, 75], crs=ccrs.PlateCarree())
+        lat_formatter = LatitudeFormatter()
+        axes[i].yaxis.set_major_formatter(lat_formatter)
+        axes[i].get_yaxis().set_ticklabels([])    
+        axes[i].coastlines(lw=0.25, resolution='50m', color='k', zorder=3)
+        axes[i].set_extent([lng.min()-180., lng.max()-180., 10., 80.])
+        axes[i].outline_patch.set_zorder(20)
+    # Label parallels and meridians, if appropriate
+    axes = [ax1, ax2, ax3, ax4]
+    for i in np.arange(0, len(axes), 1):
+        axes[i].set_yticks([15, 45, 75], crs=ccrs.PlateCarree())
+        lat_formatter = LatitudeFormatter()
+        axes[i].yaxis.set_major_formatter(lat_formatter)
+        axes[i].tick_params(which='major', labelsize=9)
+    ax4.set_xticks([-180, -120, -60, 0, 60, 120, 180], crs=ccrs.PlateCarree())    
+    lng_formatter = LongitudeFormatter()
+    ax4.xaxis.set_major_formatter(lng_formatter)       
+    ax4.tick_params(which='major', labelsize=9)
+    ax8.set_xticks([-180, -120, -60, 0, 60, 120, 180], crs=ccrs.PlateCarree())    
+    lng_formatter = LongitudeFormatter()
+    ax8.xaxis.set_major_formatter(lng_formatter)       
+    ax8.tick_params(which='major', labelsize=9)
+    plt.subplots_adjust(left=0.05, right=0.85, hspace=0.3)
+    # Add custom legend
+    patch_1 = Patch(fill=False, label='E[r] > 0', 
+          hatch='...', linewidth=0.5)
+    patch_2 = Patch(fill=False, label='E[r] < 0', 
+          hatch='///', linewidth=0.5)
+    leg = ax8.legend(handles=[patch_1, patch_2], ncol=1, frameon=False, 
+        bbox_to_anchor=[1.03, 0.75, 0, 0], fontsize=12)
+    for patch in leg.get_patches():
+        patch.set_height(12)
+        patch.set_width(28)
+    # # Add colorbar
+    colorbar_axes = plt.gcf().add_axes([ax5.get_position().x1+0.03, 
+        ax7.get_position().y0, 0.02, 
+        (ax5.get_position().y1-ax7.get_position().y0)]) 
+    colorbar = plt.colorbar(mb, colorbar_axes, orientation='vertical', 
+        ticks=clevs, extend='both')
+    colorbar.ax.tick_params(labelsize=12)
+    colorbar.set_label('[$\cdot$]', fontsize=16)
+    plt.savefig('/Users/ghkerr/phd/tracer/figs/'+
+        'fig7.png', dpi=500)
+    plt.show()
+    return
+
+
+# lng = lng_gc
+# lat = lat_gc
+o3_jja = o3_gmi
+o3_djf = o3_gmi_djf
+# # edj = 
+# lng = lng_gc
+# lat = lat_gc
+# # V = Vcolumn_jja
+# # V = np.nanmean(Vcolumn, axis=1)
+# o3 = o3_gmi
+# lat = lat_gc
+# lng = lng_gc
+# lev = lev_gc
+# V_jja = Vcolumn
+# V_djf = Vcolumn_djf
+
+
+
+# # Figures 
+# fig1(lat_gc, lng_gc, o3_jja, o3_djf, edj_dist_jja, edj_dist_djf, 
+#     edj_jja, edj_djf)
+    
+fig2(lat, lng, TRAC_10_20_jja, TRAC_20_30_jja, TRAC_30_40_jja, 
+    TRAC_40_50_jja, TRAC_50_60_jja, TRAC_60_70_jja, TRAC_70_80_jja, edj_jja)
+
+# fig3(lat, lng, TRAC_10_20_jja, TRAC_40_50_jja, TRAC_70_80_jja, TRAC_10_20_djf, 
+#     TRAC_40_50_djf, TRAC_70_80_djf, edj_dist_jja, edj_dist_djf, edj_jja, 
+#     edj_djf)
+
+# fig4(lat, lng, TRAC_10_20_jja, TRAC_20_30_jja, TRAC_30_40_jja, 
+#     TRAC_40_50_jja, TRAC_50_60_jja, TRAC_60_70_jja, TRAC_70_80_jja, 
+#     TRAC_10_20_djf, TRAC_20_30_djf, TRAC_30_40_djf, TRAC_40_50_djf, 
+#     TRAC_50_60_djf, TRAC_60_70_djf, TRAC_70_80_djf, V_jja, V_djf, 
+#     edj_dist_jja, edj_dist_djf, edj_jja, edj_djf)
+    
+# fig5(lat, lng, lev, TRAC_10_20_jja, TRAC_40_50_jja, TRAC_70_80_jja, 
+#     V_jja, edj_jja)
+
+# fig6(lat, lng, V_jja, V_djf, edj_jja, edj_djf)
+    
+# fig7(lat, lng, o3_jja, o3_djf, TRAC_10_20_jja, TRAC_40_50_jja, 
+#     TRAC_70_80_jja, TRAC_10_20_djf, TRAC_40_50_djf, TRAC_70_80_djf, V_jja, 
+#     V_djf, edj_dist_jja, edj_dist_djf, edj_jja, edj_djf)    
+    
