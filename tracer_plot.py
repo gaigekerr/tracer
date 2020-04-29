@@ -1689,10 +1689,10 @@ from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 # https://vis4.net/palettes/#/9|s|00429d,96ffea,ffffe0|ffffe0,ff005e,93003a|1|1
 COLORS = ['#003f5c', '#514969', '#80556f', '#a9636c', '#cc7560', 
     '#e98b47', '#ffa600']
-LABELS = ['$\chi_{10-20^{\circ}}$', '$\chi_{20-30^{\circ}}$', 
-    '$\chi_{30-40^{\circ}}$', '$\chi_{40-50^{\circ}}$', 
-    '$\chi_{50-60^{\circ}}$','$\chi_{60-70^{\circ}}$', 
-    '$\chi_{70-80^{\circ}}$']
+LABELS = ['$\chi_{10-20}$', '$\chi_{20-30}$', 
+    '$\chi_{30-40}$', '$\chi_{40-50}$', 
+    '$\chi_{50-60}$','$\chi_{60-70}$', 
+    '$\chi_{70-80}$']
 mpl.rcParams['hatch.linewidth'] = 0.3  
 mpl.rcParams['xtick.major.width'] = 1 
 mpl.rcParams['ytick.major.width'] = 1   
@@ -1737,35 +1737,15 @@ def fig1(lat, lng, o3_jja, o3_djf, edj_dist_jja, edj_dist_djf, edj_jja,
     """
     if lng[-1] != 360:
         lng[-1] = 360.  
-    fig = plt.figure(figsize=(9.5,3.5))
-    ax1 = plt.subplot2grid((2,3), (0,0))
-    ax2 = plt.subplot2grid((2,3), (0,1), colspan=2,
+    fig = plt.figure(figsize=(7.,3.5))
+    ax2 = plt.subplot2grid((2,2), (0,0), colspan=2,
         projection=ccrs.PlateCarree(central_longitude=0.))
-    ax3 = plt.subplot2grid((2,3), (1,0))
-    ax4 = plt.subplot2grid((2,3), (1,1), colspan=2,
+    ax4 = plt.subplot2grid((2,2), (1,0), colspan=2,
         projection=ccrs.PlateCarree(central_longitude=0.))
-    ax1.set_title('(a) JJA O$_{3}$', fontsize=12, x=0.02, 
+    ax2.set_title('(a) JJA O$_{3}$ (PW$\:$-$\:$EW)', fontsize=12, x=0.02, 
         ha='left')
-    ax2.set_title('(b) JJA O$_{3}$ (PW$\:$-$\:$EW)', fontsize=12, x=0.02, 
-        ha='left')
-    ax3.set_title('(c) DJF O$_{3}$', fontsize=12, x=0.02, 
-        ha='left')
-    ax4.set_title('(d) DJF O$_{3}$ (PW$\:$-$\:$EW)', fontsize=12, x=0.02, 
-        ha='left')
-    # Plot time- and zonally-average JJA and DJF O3 
-    ax1.plot(np.nanmean(o3_jja, axis=tuple((0,2))), lat, ls='-', lw=2, 
-        color='k')
-    ax3.plot(np.nanmean(o3_djf, axis=tuple((0,2))), lat, ls='-', lw=2, 
-        color='k')
-    for ax in [ax1, ax3]:
-        ax.set_xlim([20, 45])
-        ax.set_ylim([10,80])
-        ax.set_xticklabels([''])
-        ax.set_yticks([15,45,75])
-        ax.set_yticklabels(['15$^{\circ}$N','45$^{\circ}$N','75$^{\circ}$N'])
-        ax.tick_params(which='major', labelsize=9)
-    ax3.set_xticklabels(['20', '25', '30', '35', '40', '45'])    
-    ax3.set_xlabel('[ppbv]', fontsize=12)    
+    ax4.set_title('(b) DJF O$_{3}$ (PW$\:$-$\:$EW)', fontsize=12, x=0.02, 
+        ha='left')   
     # Calculate tracer-jet correlation, significance, and PW/EW composites
     r_o3jet_jja = globalo3_calculate.calculate_r(o3_jja, edj_dist_jja, lat, 
         lng)
@@ -1819,25 +1799,15 @@ def fig1(lat, lng, o3_jja, o3_djf, edj_dist_jja, edj_dist_djf, edj_jja,
     lng_formatter = LongitudeFormatter()
     ax4.xaxis.set_major_formatter(lng_formatter)       
     ax4.tick_params(which='major', labelsize=9)
-    plt.subplots_adjust(left=0.1, right=0.88, top=0.95, bottom=0.08, 
+    plt.subplots_adjust(left=0.1, right=0.86, top=0.95, bottom=0.08, 
         wspace=0.2, hspace=-0.1)
     # Add colorbar
     cbaxes = fig.add_axes([ax2.get_position().x1+0.03, ax4.get_position().y0, 
         0.02, ax2.get_position().y1-ax4.get_position().y0])
     cb = plt.colorbar(mb, cax=cbaxes, orientation='vertical')
-    cb.set_label(label='[ppbv]', size=12)
-    # cb.set_ticks(np.linspace(-0.2, 0.2, 11))
+    cb.set_label(label='[ppb]', size=12)
     cb.ax.tick_params(labelsize=9)
-    # Move ax1 and ax3 such that their top/bottom line up with ax2 and ax4
-    pos = ax1.get_position()
-    pos = [pos.x0-0.04, ax2.get_position().y0, pos.width, 
-        (ax2.get_position().y1-ax2.get_position().y0)] 
-    ax1.set_position(pos)
-    pos = ax3.get_position()
-    pos = [pos.x0-0.04, ax4.get_position().y0, pos.width, 
-        (ax4.get_position().y1-ax4.get_position().y0)] 
-    ax3.set_position(pos)
-    plt.savefig('/Users/ghkerr/phd/tracer/figs/'+'fig1.png', dpi=500)
+    plt.savefig('/Users/ghkerr/phd/tracer/figs/'+'fig1.pdf', dpi=500)
     plt.show()    
     return 
 
@@ -1928,19 +1898,19 @@ def fig2(lat, lng, TRAC_10_20_jja, TRAC_20_30_jja, TRAC_30_40_jja,
     ax1.legend(bbox_to_anchor=[3.3, -0.1, 0, 0], ncol=4, frameon=False, 
         fontsize=12)
     # Distribution of X70-80
-    ax2.set_title('(b) $\chi_{70-80^{\circ}}$', fontsize=12, x=0.02, ha='left')
+    ax2.set_title('(b) $\chi_{70-80}$', fontsize=12, x=0.02, ha='left')
     mb = ax2.contourf(lng, lat, np.nanmean(TRAC_70_80_jja, 
         axis=tuple((0,1)))*1e6, np.linspace(0., 1.6, 9), 
         cmap=plt.get_cmap('pink_r'), extend='max', 
         transform=ccrs.PlateCarree(), zorder=2)
     # Distribution of X40-50
-    ax3.set_title('(c) $\chi_{40-50^{\circ}}$', fontsize=12, x=0.02, ha='left')
+    ax3.set_title('(c) $\chi_{40-50}$', fontsize=12, x=0.02, ha='left')
     mb = ax3.contourf(lng, lat, 
         np.nanmean(TRAC_40_50_jja, axis=tuple((0,1)))*1e6, 
         np.linspace(0., 1.6, 9), cmap=plt.get_cmap('pink_r'), extend='max',
         transform=ccrs.PlateCarree(), zorder=2)
     # Distribution of X10-20
-    ax4.set_title('(d) $\chi_{10-20^{\circ}}$', fontsize=12, x=0.02, ha='left')
+    ax4.set_title('(d) $\chi_{10-20}$', fontsize=12, x=0.02, ha='left')
     mb = ax4.contourf(lng, lat, 
         np.nanmean(TRAC_10_20_jja, axis=tuple((0,1)))*1e6, 
         np.linspace(0., 1.6, 9), cmap=plt.get_cmap('pink_r'), extend='max',
@@ -1979,7 +1949,7 @@ def fig2(lat, lng, TRAC_10_20_jja, TRAC_20_30_jja, TRAC_30_40_jja,
     pos1 = [pos1.x0-0.04, ax4.get_position().y0, pos1.width, 
         (ax2.get_position().y1-ax4.get_position().y0)] 
     ax1.set_position(pos1) # set a new position
-    plt.savefig('/Users/ghkerr/phd/tracer/figs/'+'fig2.png', dpi=500)
+    plt.savefig('/Users/ghkerr/phd/tracer/figs/'+'fig2.pdf', dpi=500)
     plt.show()    
     return 
 
@@ -2057,18 +2027,18 @@ def fig3(lat, lng, TRAC_10_20_jja, TRAC_40_50_jja, TRAC_70_80_jja,
         projection=ccrs.PlateCarree(central_longitude=0.))
     ax6 = plt.subplot2grid((3,4), (2,2), colspan=2,
         projection=ccrs.PlateCarree(central_longitude=0.))    
-    ax1.set_title('(a) JJA $\chi_{70-80^{\circ}}$', fontsize=12, x=0.02, 
-        ha='left')
-    ax2.set_title('(c) JJA $\chi_{40-50^{\circ}}$', fontsize=12, x=0.02,
-        ha='left')
-    ax3.set_title('(e) JJA $\chi_{10-20^{\circ}}$', fontsize=12, x=0.02,
-        ha='left')
-    ax4.set_title('(b) DJF $\chi_{70-80^{\circ}}$', fontsize=12, x=0.02,
-        ha='left')
-    ax5.set_title('(d) DJF $\chi_{40-50^{\circ}}$', fontsize=12, x=0.02,
-        ha='left')
-    ax6.set_title('(f) DJF $\chi_{10-20^{\circ}}$', fontsize=12, x=0.02, 
-        ha='left')
+    ax1.set_title('(a) JJA $\chi_{70-80}$ (PW$\:$-$\:$EW)', fontsize=12, 
+        x=0.02, ha='left')
+    ax2.set_title('(c) JJA $\chi_{40-50}$ (PW$\:$-$\:$EW)', fontsize=12, 
+        x=0.02, ha='left')
+    ax3.set_title('(e) JJA $\chi_{10-20}$ (PW$\:$-$\:$EW)', fontsize=12, 
+        x=0.02, ha='left')
+    ax4.set_title('(b) DJF $\chi_{70-80}$ (PW$\:$-$\:$EW)', fontsize=12, 
+        x=0.02, ha='left')
+    ax5.set_title('(d) DJF $\chi_{40-50}$ (PW$\:$-$\:$EW)', fontsize=12, 
+        x=0.02, ha='left')
+    ax6.set_title('(f) DJF $\chi_{10-20}$ (PW$\:$-$\:$EW)', fontsize=12, 
+        x=0.02, ha='left')
     # Loop through JJA axes and plot
     axes = [ax1, ax2, ax3]
     for i, tracer in enumerate([TRAC_70_80_jja, TRAC_40_50_jja, 
@@ -2115,7 +2085,7 @@ def fig3(lat, lng, TRAC_10_20_jja, TRAC_40_50_jja, TRAC_70_80_jja,
             np.nanmean(tracer, axis=1), edj_dist_djf, r_tracerjet, lat, lng)
         eqjet_lat, eqjet_lat_var, pwjet_lat, pwjet_lat_var, pwjet_tracer, \
             eqjet_tracer = globalo3_calculate.segregate_field_bylat(
-            np.nanmean(tracer, axis=1), lng_gc, edj_djf, 
+            np.nanmean(tracer, axis=1), lng, edj_djf, 
             np.arange(0, len(tracer), 1))
         mb = axes[i].contourf(lng, lat, (pwjet_tracer-eqjet_tracer)*1e6,
             np.linspace(-0.2, 0.2, 11), cmap=plt.get_cmap('coolwarm'), 
@@ -2153,7 +2123,7 @@ def fig3(lat, lng, TRAC_10_20_jja, TRAC_40_50_jja, TRAC_70_80_jja,
     cb.set_label(label='[ppm]', size=12)
     cb.set_ticks(np.linspace(-0.2, 0.2, 11))
     cb.ax.tick_params(labelsize=9)
-    plt.savefig('/Users/ghkerr/phd/tracer/figs/'+'fig3.png', dpi=500)
+    plt.savefig('/Users/ghkerr/phd/tracer/figs/'+'fig3.pdf', dpi=500)
     plt.show()    
     return
 
@@ -2260,7 +2230,7 @@ def fig4(lat, lng, TRAC_10_20_jja, TRAC_20_30_jja, TRAC_30_40_jja,
         ax2.axvline(x=x, c='k', lw=0.75, ls='--', zorder=0)
     for x in lat_where_0_djf: 
         ax3.axvline(x=x, c='k', lw=0.75, ls='--', zorder=0)        
-    plt.savefig('/Users/ghkerr/phd/tracer/figs/'+'fig4.png', dpi=500)
+    plt.savefig('/Users/ghkerr/phd/tracer/figs/'+'fig4.pdf', dpi=500)
     plt.show()    
     return
 
@@ -2323,9 +2293,9 @@ def fig5(lat, lng, TRAC_40_50_jja, TRAC_40_50_djf, V_jja, V_djf, edj_dist_jja,
         projection=ccrs.PlateCarree(central_longitude=0.))
     ax1.set_title('(a) JJA V (PW$\:$-$\:$EW)', fontsize=12, x=0.02, ha='left')
     ax2.set_title('(b) DJF V (PW$\:$-$\:$EW)', fontsize=12, x=0.02, ha='left')
-    ax3.set_title('(c) JJA r($\chi_{40-50^{\circ}}$, $\phi_{jet}$)', 
+    ax3.set_title('(c) JJA r($\chi_{40-50}$, $\phi_{jet}$)', 
         fontsize=12, x=0.02, ha='left')
-    ax4.set_title('(d) DJF r($\chi_{40-50^{\circ}}$, $\phi_{jet}$)', 
+    ax4.set_title('(d) DJF r($\chi_{40-50}$, $\phi_{jet}$)', 
         fontsize=12, x=0.02, ha='left')
     cmap = plt.get_cmap('coolwarm')
     # Determine near-surface meridional V-jet correlation
@@ -2498,9 +2468,8 @@ def fig5(lat, lng, TRAC_40_50_jja, TRAC_40_50_djf, V_jja, V_djf, edj_dist_jja,
         ticks=clevsb[::2], extend='both')
     colorbar.ax.tick_params(labelsize=12)
     colorbar.set_label('[$\cdot$]', fontsize=16)
-    plt.savefig('/Users/ghkerr/Desktop/hihigaige.png', dpi=400)
     plt.savefig('/Users/ghkerr/phd/tracer/figs/'+
-        'fig5.png', dpi=500)
+        'fig5.pdf', dpi=500)
     plt.show()
     return
 
@@ -2632,15 +2601,15 @@ def figS1(lat, lng, lev, TRAC_10_20_jja, TRAC_40_50_jja, TRAC_70_80_jja,
     for ax in [ax7, ax8, ax9]:
         ax.set_xticklabels(['15', '30', '45', '60', '75'])    
         ax.set_xlabel('Latitude [$^{\circ}$N]', fontsize=12)
-    ax1.set_ylabel('$\chi_{10-20^{\circ}}$ [kg s$^{-1}$]', fontsize=12)
-    ax4.set_ylabel('$\chi_{40-50^{\circ}}$ [kg s$^{-1}$]', fontsize=12)
-    ax7.set_ylabel('$\chi_{70-80^{\circ}}$ [kg s$^{-1}$]', fontsize=12)
+    ax1.set_ylabel('$\chi_{10-20}$ [kg s$^{-1}$]', fontsize=12)
+    ax4.set_ylabel('$\chi_{40-50}$ [kg s$^{-1}$]', fontsize=12)
+    ax7.set_ylabel('$\chi_{70-80}$ [kg s$^{-1}$]', fontsize=12)
     for ax in axes:
         ax.tick_params(which='major', labelsize=9)
     ax8.legend(bbox_to_anchor=[1.4, -0.32, 0, 0], ncol=3, frameon=False, 
         fontsize=12)
     plt.subplots_adjust(left=0.15, bottom=0.15)
-    plt.savefig('/Users/ghkerr/phd/tracer/figs/'+'fig5.png', dpi=500)
+    plt.savefig('/Users/ghkerr/phd/tracer/figs/'+'figS1.pdf', dpi=500)
     plt.show()    
     return
     
@@ -2682,10 +2651,3 @@ def figS1(lat, lng, lev, TRAC_10_20_jja, TRAC_40_50_jja, TRAC_70_80_jja,
     
 # figS1(lat, lng, lev, TRAC_10_20_jja, TRAC_40_50_jja, TRAC_70_80_jja, 
 #     V_jja, edj_jja)
-
-
-
-
-
-    
-    
