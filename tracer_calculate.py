@@ -87,3 +87,38 @@ def determine_jetdist(edj, lat, lng):
     for day in np.arange(0,len(edj),1):
         edj_dist[day] = edj[day]-lat_grid
     return edj_dist
+
+def tracer_mass_weight(tracer, lev):
+    """Account for mass of different levels in column calculation by
+    vertically integrating over pressure levels. 
+
+    Parameters
+    ----------
+    tracer : numpy.ndarray
+        Tracer mixing ratio, units of mol mol-1, [time, lev, lat, lng] 
+    lev : numpy.ndarray
+        Model pressure levels, units of hPa, [lev]               
+
+    Returns
+    -------
+    tracer_integrate : numpy.ndarray    
+        Vertically-integrated pressure-weighted tracer, units of kg m-1 s-2, 
+        [time, 1, lat, lng]
+    """
+    import numpy as np
+    # Difference between pressure levels
+    dp = np.abs(np.diff(lev))
+    # Append 15 hPa to beginning of array; this is the difference between the 
+    # surface and second layer (see diagram in tracer_plot.py)
+    dp = np.hstack((np.array([15.]), dp))
+    # Convert to Pa 
+    dp = dp*100.
+    tracer_integrate = []
+    for i, ilev in enumerate(lev):
+        tracer_integrate.append(tracer[:,i]*dp[i])
+    tracer_integrate = np.stack(tracer_integrate)
+    tracer_integrate = np.nansum(tracer_integrate, axis=0)
+    tracer_integrate = np.reshape(tracer_integrate, 
+        [tracer_integrate.shape[0], 1, tracer_integrate.shape[1], 
+         tracer_integrate.shape[2]])
+    return tracer_integrate
